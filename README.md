@@ -1,203 +1,136 @@
-# ☽ Carthélys – Architecture Full-Stack
+# Projet Cuisine Tunisienne – Full Stack
 
-Restaurant Tunisien Gastronomique | Frontend HTML/CSS/JS · Backend Spring Boot · MySQL
+Ce projet contient :
+- Frontend : HTML/CSS/JS (pages publiques + pages admin)
+- Backend : Java Spring Boot + MySQL
 
----
+## ✅ Ce qui est implémenté
 
-## Structure du Projet
+- Connexion admin via `/admin` (page login dédiée)
+- Authentification JWT (API protégée côté admin)
+- Entité SQL `Admin`
+- Entité SQL `Reservation`
+- Réservation depuis `reservation.html` enregistrée en base
+- Gestion des réservations côté admin (`resAdmin.html`) :
+  - liste dynamique
+  - filtres
+  - confirmation/annulation
+  - export CSV
+- Dashboard admin (`DashboradAdmin.html`) connecté à la base :
+  - stats en temps réel
+  - graphe des 7 derniers jours
 
-```
-carthelys/
-├── admin-carth.html              ← Dashboard responsable (standalone)
-│
-├── frontend/                     ← Vos fichiers existants (inchangés)
-│   ├── index-carth.html
-│   ├── menu-carth.html
-│   ├── reservation-carth.html
-│   ├── contact-carth.html
-│   ├── style-carth.css
-│   └── main-carth.js
-│
-└── carthelys-backend/            ← API Spring Boot
-    ├── pom.xml
-    ├── carthelys_db.sql          ← Script MySQL complet
-    └── src/main/java/tn/carthelys/
-        ├── CarthelysApplication.java
-        ├── model/
-        │   ├── Reservation.java
-        │   ├── Review.java
-        │   ├── ContactMessage.java
-        │   └── User.java
-        ├── repository/
-        │   ├── ReservationRepository.java
-        │   ├── ReviewRepository.java
-        │   ├── ContactMessageRepository.java
-        │   └── UserRepository.java
-        ├── service/
-        │   ├── ReservationService.java
-        │   ├── ReviewService.java
-        │   └── ContactService.java
-        ├── controller/
-        │   ├── ReservationController.java
-        │   ├── ReviewController.java
-        │   ├── ContactController.java
-        │   └── AuthController.java
-        ├── config/
-        │   ├── SecurityConfig.java    (JWT Filter inclus)
-        │   └── JwtService.java
-        └── exception/
-            ├── GlobalExceptionHandler.java
-            └── ResourceNotFoundException.java
+## Structure
+
+- `backend/` : API Spring Boot
+- `adminLogin.html` : écran de connexion admin
+- `adminLogin.js` : logique de login
+- `adminApi.js` : utilitaires API protégée
+- `reservation.html` : envoi réservation vers backend
+- `resAdmin.html` : gestion réservations admin (live)
+- `DashboradAdmin.html` : dashboard admin (live)
+
+## 1) Préparer MySQL
+
+Créer la base et les tables (optionnel, sinon Hibernate les crée automatiquement) :
+
+```sql
+SOURCE backend/database/mondelys_db.sql;
 ```
 
----
+## 2) Configurer le backend
 
-## Installation & Lancement
+Fichier : `backend/src/main/resources/application.properties`
 
-### 1. Base de données MySQL
+Mettre vos valeurs :
+
+- `spring.datasource.username`
+- `spring.datasource.password`
+- `app.jwt.secret` (clé longue et sécurisée)
+
+## 3) Lancer l’application
 
 ```bash
-mysql -u root -p < carthelys_db.sql
+cd backend
+mvn spring-boot:run
 ```
 
-Crée : base `carthelys_db`, toutes les tables, données de test, vues SQL.
+L’application tourne sur :
+- `http://localhost:8080`
 
-**Comptes admin créés :**
-| Email | Mot de passe | Rôle |
-|-------|-------------|------|
-| admin@carthelys.tn | Admin2024! | ADMIN |
-| manager@carthelys.tn | Admin2024! | MANAGER |
+Le backend sert aussi les fichiers HTML du dossier racine du projet.
 
-### 2. Configuration Spring Boot
+### Démarrage rapide (Windows PowerShell)
 
-Modifier `src/main/resources/application.properties` :
-```properties
-spring.datasource.password=VOTRE_MOT_DE_PASSE_MYSQL
-spring.mail.password=VOTRE_MOT_DE_PASSE_SMTP
+Si votre MySQL a un mot de passe `root`, utilisez :
+
+```powershell
+cd backend
+$env:DB_USERNAME="root"
+$env:DB_PASSWORD="VOTRE_MOT_DE_PASSE_MYSQL"
+mvn spring-boot:run
 ```
 
-### 3. Lancer le backend
+### Démarrage ultra simple (automatique)
 
-```bash
-cd carthelys-backend
-./mvnw spring-boot:run
-# ou : mvn spring-boot:run
+Depuis la racine du projet, lancez :
+
+```powershell
+./start-project.ps1
 ```
 
-L'API démarre sur : **http://localhost:8080**
+ou double-cliquez :
 
-### 4. Dashboard Admin
+- `start-project.bat`
 
-Ouvrir `admin-carth.html` dans un navigateur.
-→ Le dashboard est autonome et se connecte à l'API via `fetch()`.
+Ce script fait automatiquement :
+- vérification Java / Maven / MySQL CLI
+- test connexion MySQL
+- création DB + tables depuis `backend/database/mondelys_db.sql`
+- compilation Maven
+- lancement Spring Boot avec variables DB
+- ouverture du site dans le navigateur
 
----
+Ensuite ouvrez :
+- `http://localhost:8080/index.html`
+- `http://localhost:8080/admin`
 
-## API Endpoints
+## 4) Accès admin
 
-### Authentification
-```
-POST /api/auth/login
-Body: { "email": "admin@carthelys.tn", "password": "Admin2024!" }
-→ { "token": "eyJ...", "email": "admin@carthelys.tn" }
-```
+Ouvrir :
+- `http://localhost:8080/admin`
 
-### Réservations (client)
-```
-POST /api/reservations          ← créer (public)
-```
+Compte admin seed automatiquement au démarrage :
+- Email : `admin@mondelys.tn`
+- Mot de passe : `Admin2026!`
 
-### Réservations (admin – JWT requis)
-```
-GET  /api/reservations          ?page=0&size=10&q=nadia&status=EN_ATTENTE
-GET  /api/reservations/{id}
-PATCH /api/reservations/{id}/status   Body: { "status": "CONFIRMEE" }
-PATCH /api/reservations/{id}/note     Body: { "note": "..." }
-GET  /api/reservations/stats
-```
+## API principales
 
-### Avis (client)
-```
-POST /api/reviews               ← soumettre (public)
-GET  /api/reviews/published     ← affichage site (public)
-```
+### Public
+- `POST /api/reservations` : créer une réservation
 
-### Avis (admin – JWT requis)
-```
-GET  /api/reviews               ?page=0&size=12
-POST /api/reviews/{id}/respond  Body: { "response": "Merci..." }
-PATCH /api/reviews/{id}/read
-GET  /api/reviews/stats
-```
+### Admin
+- `POST /api/admin/auth/login` : login admin
+- `GET /api/admin/reservations` : liste réservations
+- `PATCH /api/admin/reservations/{id}/status` : changer statut
+- `GET /api/admin/dashboard` : statistiques dashboard
+- `GET /api/admin/dashboard/weekly-reservations` : graphe hebdomadaire
 
-### Messages (admin – JWT requis)
-```
-POST /api/contacts              ← formulaire contact (public)
-GET  /api/contacts
-PATCH /api/contacts/{id}/read
-PATCH /api/contacts/{id}/status Body: { "status": "REPLIED" }
-DELETE /api/contacts/{id}
-```
+## Notes
 
----
+- Les pages admin sont protégées côté frontend : sans token, redirection vers `/admin`.
+- Le vrai contrôle d’accès est sur les routes API `/api/admin/**`.
+- Toute la logique métier des réservations est stockée en base (pas dans HTML).
 
-## Intégration Frontend → API
+## Dépannage
 
-Dans `reservation-carth.html`, remplacer le `setTimeout` par :
+### `Cannot GET /admin` sur `127.0.0.1:5500`
 
-```javascript
-// Exemple d'appel API depuis le formulaire de réservation
-const response = await fetch('http://localhost:8080/api/reservations', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    firstName: document.getElementById('firstName').value,
-    lastName:  document.getElementById('lastName').value,
-    email:     document.getElementById('email').value,
-    phone:     document.getElementById('phone').value,
-    reservationDate: document.getElementById('date').value,
-    reservationTime: document.getElementById('time').value + ':00',
-    guestsCount: parseInt(document.getElementById('guests').value),
-    occasion:    document.getElementById('occasion').value,
-    preorder:    document.getElementById('preorder').value,
-    specialRequests: document.getElementById('requests').value
-  })
-});
-const data = await response.json();
-document.getElementById('resRef').textContent = data.reference;
-```
+Vous êtes sur Live Server, qui ne connaît pas les routes backend.
+Utilisez `http://localhost:8080/admin` (backend Spring Boot lancé).
 
-Dans le **Dashboard Admin**, authentifier puis utiliser le token :
-```javascript
-// Login
-const res = await fetch('/api/auth/login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email, password })
-});
-const { token } = await res.json();
-localStorage.setItem('token', token);
+### `Access denied for user 'root'@'localhost'`
 
-// Appel protégé
-const reservations = await fetch('/api/reservations', {
-  headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
-});
-```
-
----
-
-## Technologies
-
-| Couche | Technologie |
-|--------|-------------|
-| Frontend | HTML5, CSS3, JavaScript ES6+ |
-| Backend | Spring Boot 3.2, Java 17 |
-| Sécurité | Spring Security + JWT (jjwt) |
-| ORM | Spring Data JPA / Hibernate |
-| Base de données | MySQL 8.x |
-| Validation | Bean Validation (Jakarta) |
-| Build | Maven |
-
----
-
-*☽ Carthélys – Cuisine Tunisienne Gastronomique · Carthage, Tunis*
+Votre mot de passe MySQL ne correspond pas.
+- Vérifiez la connexion MySQL
+- Lancez l’app avec `DB_USERNAME` et `DB_PASSWORD` (voir section "Démarrage rapide")

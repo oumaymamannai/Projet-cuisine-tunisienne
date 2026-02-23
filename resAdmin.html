@@ -27,7 +27,6 @@
     <a href="reviwAdmin.html"      data-page="reviwAdmin.html">      <i class="fas fa-star"></i>           Avis Clients <span class="badge">5</span></a>
     <div class="nav-section-label">Gestion</div>
     <a href="contactAdmin.html"     data-page="contactAdmin.html">     <i class="fas fa-envelope"></i>       Messages <span class="badge">2</span></a>
-    <a href="MenuAdmin.html"         data-page="MenuAdmin.html">         <i class="fas fa-utensils"></i>       Menu</a>
     <div class="nav-section-label">Paramètres</div>
     <a href="settingsAdmin.html"     data-page="settingsAdmin.html">     <i class="fas fa-cog"></i>            Paramètres</a>
   </nav>
@@ -153,28 +152,19 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
+<script src="adminApi.js"></script>
 <script src="navAdmin.js"></script>
 <script>
-  const reservations = [
-    { id:'CTH-001', name:'Nadia Belhaj',    email:'nadia@email.tn',       phone:'+216 71 123 456',   date:'2026-02-22', time:'20:00', guests:'4 personnes', occasion:'Anniversaire',       preorder:'Couscous Berbère Royal',        requests:'Décoration anniversaire SVP',         status:'en-attente' },
-    { id:'CTH-002', name:'Pierre Leblanc',  email:'pierre@gmail.com',     phone:'+33 6 12 34 56 78', date:'2026-02-22', time:'13:00', guests:'2 personnes', occasion:'',                   preorder:'',                              requests:'Sans gluten si possible',             status:'confirmée'  },
-    { id:'CTH-003', name:'Amira Khelifi',   email:'amira@email.tn',       phone:'+216 98 765 432',   date:'2026-02-22', time:'19:30', guests:'6 personnes', occasion:'Repas de famille',   preorder:"Tajine de Djerba à l'Agneau",   requests:'',                                   status:'confirmée'  },
-    { id:'CTH-004', name:'Hamza Triki',     email:'hamza.t@outlook.com',  phone:'+216 55 432 109',   date:'2026-02-23', time:'12:30', guests:'3 personnes', occasion:'',                   preorder:'',                              requests:'',                                   status:'en-attente' },
-    { id:'CTH-005', name:'Sonia Zarrouk',   email:'sonia.z@email.tn',     phone:'+216 71 999 888',   date:'2026-02-23', time:'19:00', guests:'8 personnes', occasion:'Fiançailles',         preorder:'Couscous aux Poissons de Sfax', requests:'Décoration florale, champagne halal', status:'confirmée'  },
-    { id:'CTH-006', name:'Karim Mansour',   email:'k.mansour@corp.tn',    phone:'+216 71 555 444',   date:'2026-02-24', time:'12:00', guests:'5 personnes', occasion:"Réunion d'affaires", preorder:'',                              requests:'Table discrète',                     status:'arrivée'    },
-    { id:'CTH-007', name:'Lina Baccouche',  email:'lina.b@mail.fr',       phone:'+33 7 88 99 00 11', date:'2026-02-21', time:'20:30', guests:'2 personnes', occasion:'Mariage',             preorder:"Koucha de l'Aïd",               requests:'',                                   status:'arrivée'    },
-    { id:'CTH-008', name:'Omar Ferchichi',  email:'omar.f@email.tn',      phone:'+216 22 333 444',   date:'2026-02-20', time:'13:30', guests:'1 personne',  occasion:'',                   preorder:'',                              requests:'',                                   status:'annulée'    },
-    { id:'CTH-009', name:'Fatma Haddad',    email:'fatma.h@email.tn',     phone:'+216 71 777 666',   date:'2026-02-25', time:'19:30', guests:'4 personnes', occasion:'Anniversaire',       preorder:'Couscous Berbère Royal',        requests:'Bougie anniversaire',                status:'en-attente' },
-    { id:'CTH-010', name:'Jean-Marc Dupont',email:'jm.dupont@company.fr', phone:'+33 6 55 66 77 88', date:'2026-02-26', time:'20:00', guests:'7 personnes', occasion:'',                   preorder:'Tajine Malsouka Tunisien',      requests:'Végétarien pour 2 personnes',         status:'en-attente' },
-  ];
+  ensureAdminAuthenticated();
 
-  let filteredRes = [...reservations];
+  let reservations = [];
+  let filteredRes = [];
 
   const statusMap = {
-    'en-attente': '<span class="status status-pending">En attente</span>',
-    'confirmée':  '<span class="status status-confirmed">Confirmée</span>',
-    'arrivée':    '<span class="status status-arrived">Arrivée</span>',
-    'annulée':    '<span class="status status-cancelled">Annulée</span>',
+    PENDING: '<span class="status status-pending">En attente</span>',
+    CONFIRMED: '<span class="status status-confirmed">Confirmée</span>',
+    ARRIVED: '<span class="status status-arrived">Arrivée</span>',
+    CANCELLED: '<span class="status status-cancelled">Annulée</span>',
   };
 
   function formatDate(d) {
@@ -186,22 +176,22 @@
       <tr>
         <td><span style="font-family:var(--ff-ui);font-size:0.78rem;font-weight:600;color:var(--terracotta);">${r.id}</span></td>
         <td>
-          <div style="font-weight:600;font-size:0.88rem;">${r.name}</div>
+          <div style="font-weight:600;font-size:0.88rem;">${r.firstName} ${r.lastName}</div>
           <div style="font-size:0.72rem;color:var(--text-light);">${r.email}</div>
         </td>
         <td>
-          <div style="font-weight:500;">${formatDate(r.date)}</div>
-          <div style="font-size:0.78rem;color:var(--text-light);">${r.time}</div>
+          <div style="font-weight:500;">${formatDate(r.reservationDate)}</div>
+          <div style="font-size:0.78rem;color:var(--text-light);">${String(r.reservationTime).slice(0, 5)}</div>
         </td>
-        <td>${r.guests}</td>
+        <td>${r.guestsCount} ${r.guestsCount > 1 ? 'personnes' : 'personne'}</td>
         <td>${r.occasion || '<span style="color:var(--text-light);font-style:italic;">—</span>'}</td>
         <td style="font-size:0.82rem;">${r.preorder || '<span style="color:var(--text-light);font-style:italic;">Sur place</span>'}</td>
         <td>${statusMap[r.status] || r.status}</td>
         <td>
           <div class="action-btns">
-            <button class="action-btn success" title="Confirmer" onclick="quickConfirm('${r.id}')"><i class="fas fa-check"></i></button>
-            <button class="action-btn"         title="Voir"      onclick="openResModal('${r.id}')"><i class="fas fa-eye"></i></button>
-            <button class="action-btn danger"  title="Annuler"   onclick="quickCancel('${r.id}')"><i class="fas fa-times"></i></button>
+            <button class="action-btn success" title="Confirmer" onclick="quickConfirm(${r.id})"><i class="fas fa-check"></i></button>
+            <button class="action-btn"         title="Voir"      onclick="openResModal(${r.id})"><i class="fas fa-eye"></i></button>
+            <button class="action-btn danger"  title="Annuler"   onclick="quickCancel(${r.id})"><i class="fas fa-times"></i></button>
           </div>
         </td>
       </tr>
@@ -209,63 +199,127 @@
     document.getElementById('resCount').textContent = `Affichage 1–${data.length} sur ${reservations.length}`;
   }
 
-  function filterReservations() {
-    const search = document.getElementById('searchRes').value.toLowerCase();
+  async function fetchReservations() {
+    const search = document.getElementById('searchRes').value.trim();
     const status = document.getElementById('filterStatus').value;
-    filteredRes = reservations.filter(r => {
-      const matchSearch = !search || r.name.toLowerCase().includes(search) || r.email.toLowerCase().includes(search) || r.id.toLowerCase().includes(search);
-      const matchStatus = !status || r.status === status;
-      return matchSearch && matchStatus;
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (status) {
+      const serverStatus = {
+        'en-attente': 'PENDING',
+        'confirmée': 'CONFIRMED',
+        'arrivée': 'ARRIVED',
+        'annulée': 'CANCELLED'
+      }[status];
+      if (serverStatus) params.set('status', serverStatus);
+    }
+
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    reservations = await adminFetch(`/api/admin/reservations${qs}`);
+    applyDateFilterAndRender();
+  }
+
+  function applyDateFilterAndRender() {
+    const dateFilter = document.getElementById('filterDate').value;
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    filteredRes = reservations.filter((reservation) => {
+      if (!dateFilter) return true;
+      const reservationDate = new Date(reservation.reservationDate + 'T00:00:00');
+      if (dateFilter === 'today') {
+        return reservationDate.toDateString() === today.toDateString();
+      }
+      if (dateFilter === 'week') {
+        return reservationDate >= startOfWeek;
+      }
+      return true;
     });
+
     renderReservations(filteredRes);
+  }
+
+  async function filterReservations() {
+    const search = document.getElementById('searchRes').value.toLowerCase();
+    if (search.length >= 2 || search.length === 0) {
+      try {
+        await fetchReservations();
+      } catch (error) {
+        showToast(error.message, false);
+      }
+      return;
+    }
+
+    applyDateFilterAndRender();
   }
 
   function openResModal(id) {
     const r = reservations.find(x => x.id === id);
     if (!r) return;
-    document.getElementById('mRef').textContent      = r.id;
+    document.getElementById('mRef').textContent      = r.referenceCode;
     document.getElementById('mStatus').textContent   = r.status;
-    document.getElementById('mName').textContent     = r.name;
+    document.getElementById('mName').textContent     = `${r.firstName} ${r.lastName}`;
     document.getElementById('mPhone').textContent    = r.phone;
     document.getElementById('mEmail').textContent    = r.email;
-    document.getElementById('mGuests').textContent   = r.guests;
-    document.getElementById('mDateTime').textContent = formatDate(r.date) + ' à ' + r.time;
+    document.getElementById('mGuests').textContent   = `${r.guestsCount} ${r.guestsCount > 1 ? 'personnes' : 'personne'}`;
+    document.getElementById('mDateTime').textContent = formatDate(r.reservationDate) + ' à ' + String(r.reservationTime).slice(0, 5);
     document.getElementById('mOccasion').textContent = r.occasion  || '—';
     document.getElementById('mPreorder').textContent = r.preorder  || 'Choix sur place';
-    document.getElementById('mRequests').textContent = r.requests  || '—';
+    document.getElementById('mRequests').textContent = r.specialRequests  || '—';
     document.getElementById('modalRes').dataset.resId = id;
     openModal('modalRes');
   }
 
-  function confirmRes() {
+  async function updateReservationStatus(id, status, message) {
+    await adminFetch(`/api/admin/reservations/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
+    });
+    await fetchReservations();
+    showToast(message, status === 'CONFIRMED');
+  }
+
+  async function confirmRes() {
     const id = document.getElementById('modalRes').dataset.resId;
-    const r  = reservations.find(x => x.id === id);
-    if (r) { r.status = 'confirmée'; renderReservations(filteredRes); }
-    closeModal('modalRes');
-    showToast('Réservation ' + id + ' confirmée !', true);
+    try {
+      await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée !');
+      closeModal('modalRes');
+    } catch (error) {
+      showToast(error.message, false);
+    }
   }
 
-  function cancelRes() {
+  async function cancelRes() {
     const id = document.getElementById('modalRes').dataset.resId;
-    const r  = reservations.find(x => x.id === id);
-    if (r) { r.status = 'annulée'; renderReservations(filteredRes); }
-    closeModal('modalRes');
-    showToast('Réservation ' + id + ' annulée.', false);
+    try {
+      await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée.');
+      closeModal('modalRes');
+    } catch (error) {
+      showToast(error.message, false);
+    }
   }
 
-  function quickConfirm(id) {
-    const r = reservations.find(x => x.id === id);
-    if (r && r.status !== 'annulée') { r.status = 'confirmée'; renderReservations(filteredRes); showToast(id + ' confirmée ✓', true); }
+  async function quickConfirm(id) {
+    try {
+      await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée ✓');
+    } catch (error) {
+      showToast(error.message, false);
+    }
   }
 
-  function quickCancel(id) {
-    const r = reservations.find(x => x.id === id);
-    if (r) { r.status = 'annulée'; renderReservations(filteredRes); showToast(id + ' annulée', false); }
+  async function quickCancel(id) {
+    try {
+      await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée');
+    } catch (error) {
+      showToast(error.message, false);
+    }
   }
 
   function exportCSV() {
     const headers = ['Réf','Nom','Email','Date','Heure','Couverts','Statut'];
-    const rows    = reservations.map(r => [r.id, r.name, r.email, r.date, r.time, r.guests, r.status]);
+    const rows    = filteredRes.map(r => [r.referenceCode, `${r.firstName} ${r.lastName}`, r.email, r.reservationDate, String(r.reservationTime).slice(0, 5), r.guestsCount, r.status]);
     const csv     = [headers, ...rows].map(r => r.join(',')).join('\n');
     const blob    = new Blob([csv], { type: 'text/csv' });
     const url     = URL.createObjectURL(blob);
@@ -275,7 +329,7 @@
     showToast('Export CSV téléchargé !', true);
   }
 
-  renderReservations(reservations);
+  fetchReservations().catch((error) => showToast(error.message, false));
 </script>
 </body>
 </html>

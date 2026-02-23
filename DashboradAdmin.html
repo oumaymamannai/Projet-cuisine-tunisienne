@@ -27,7 +27,6 @@
     <a href="reviwAdmin.html"       data-page="reviwAdmin.html">                     <i class="fas fa-star"></i>           Avis Clients    <span class="badge">5</span></a>
     <div class="nav-section-label">Gestion</div>
     <a href="contactAdmin.html"      data-page="contactAdmin.html">                    <i class="fas fa-envelope"></i>       Messages        <span class="badge">2</span></a>
-    <a href="MenuAdmin.html"          data-page="MenuAdmin.html">                        <i class="fas fa-utensils"></i>       Menu</a>
     <div class="nav-section-label">Paramètres</div>
     <a href="settingsAdmin.html"      data-page="settingsAdmin.html">                    <i class="fas fa-cog"></i>            Paramètres</a>
   </nav>
@@ -66,26 +65,26 @@
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Réservations aujourd'hui</div>
-        <div class="stat-val">14</div>
-        <div class="stat-sub up"><i class="fas fa-arrow-up"></i> +3 vs hier</div>
+        <div class="stat-val" id="statToday">0</div>
+        <div class="stat-sub up"><i class="fas fa-arrow-up"></i> Mise à jour en temps réel</div>
         <i class="fas fa-calendar-check stat-icon"></i>
       </div>
       <div class="stat-card olive">
-        <div class="stat-label">Couverts ce soir</div>
-        <div class="stat-val">47</div>
-        <div class="stat-sub up"><i class="fas fa-arrow-up"></i> Soirée chargée</div>
+        <div class="stat-label">Réservations en attente</div>
+        <div class="stat-val" id="statPending">0</div>
+        <div class="stat-sub up"><i class="fas fa-hourglass-half"></i> À vérifier</div>
         <i class="fas fa-users stat-icon"></i>
       </div>
       <div class="stat-card spice">
-        <div class="stat-label">Note moyenne</div>
-        <div class="stat-val">4.8</div>
-        <div class="stat-sub" style="color:var(--spice);">★★★★★ sur 5</div>
+        <div class="stat-label">Réservations confirmées</div>
+        <div class="stat-val" id="statConfirmed">0</div>
+        <div class="stat-sub" style="color:var(--spice);">Statut validé</div>
         <i class="fas fa-star stat-icon"></i>
       </div>
       <div class="stat-card night">
-        <div class="stat-label">Messages non lus</div>
-        <div class="stat-val">7</div>
-        <div class="stat-sub down"><i class="fas fa-envelope"></i> 5 avis · 2 contacts</div>
+        <div class="stat-label">Réservations annulées</div>
+        <div class="stat-val" id="statCancelled">0</div>
+        <div class="stat-sub down"><i class="fas fa-ban"></i> Total annulations</div>
         <i class="fas fa-inbox stat-icon"></i>
       </div>
     </div>
@@ -96,8 +95,8 @@
         <div class="chart-title">Réservations – 7 derniers jours</div>
         <div class="mini-chart" id="miniChart"></div>
         <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;">
-          <div style="font-size:0.72rem;color:var(--text-light);">Total semaine : <strong style="color:var(--night);">82 réservations</strong></div>
-          <div style="font-size:0.72rem;color:var(--text-light);">Moyenne : <strong style="color:var(--night);">11.7 / jour</strong></div>
+          <div style="font-size:0.72rem;color:var(--text-light);">Total système : <strong style="color:var(--night);" id="statTotal">0 réservations</strong></div>
+          <div style="font-size:0.72rem;color:var(--text-light);">Nouveaux clients : <strong style="color:var(--night);">suivi automatique</strong></div>
         </div>
       </div>
 
@@ -156,22 +155,43 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
+<script src="adminApi.js"></script>
 <script src="navAdmin.js"></script>
 <script>
-  // Mini bar chart
-  (function() {
-    const days   = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-    const values = [8, 12, 10, 14, 15, 18, 5];
-    const max    = Math.max(...values);
-    const chart  = document.getElementById('miniChart');
-    days.forEach((d, i) => {
-      const h    = Math.max(8, Math.round((values[i] / max) * 110));
+  ensureAdminAuthenticated();
+
+  function renderMiniChart(days, values) {
+    const max = Math.max(...values, 1);
+    const chart = document.getElementById('miniChart');
+    chart.innerHTML = '';
+
+    days.forEach((day, i) => {
+      const h = Math.max(8, Math.round((values[i] / max) * 110));
       const wrap = document.createElement('div');
       wrap.className = 'bar-wrap';
-      wrap.innerHTML = `<div class="bar" style="height:${h}px;" title="${values[i]} réservations"></div><span class="bar-label">${d}</span>`;
+      wrap.innerHTML = `<div class="bar" style="height:${h}px;" title="${values[i]} réservations"></div><span class="bar-label">${day}</span>`;
       chart.appendChild(wrap);
     });
-  })();
+  }
+
+  async function loadDashboard() {
+    try {
+      const stats = await adminFetch('/api/admin/dashboard');
+      const weekly = await adminFetch('/api/admin/dashboard/weekly-reservations');
+
+      document.getElementById('statToday').textContent = stats.reservationsToday;
+      document.getElementById('statPending').textContent = stats.pendingReservations;
+      document.getElementById('statConfirmed').textContent = stats.confirmedReservations;
+      document.getElementById('statCancelled').textContent = stats.cancelledReservations;
+      document.getElementById('statTotal').textContent = `${stats.totalReservations} réservations`;
+
+      renderMiniChart(weekly.labels || [], weekly.values || []);
+    } catch (error) {
+      showToast(error.message || 'Erreur de chargement', false);
+    }
+  }
+
+  loadDashboard();
 </script>
 </body>
 </html>

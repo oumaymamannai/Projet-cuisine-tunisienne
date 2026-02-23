@@ -243,12 +243,46 @@
     const tc = document.getElementById('terms').checked;
     if (!fn || !em || !ph || !dt || !ti || !gu) { alert('Veuillez remplir tous les champs obligatoires.'); return; }
     if (!tc) { alert('Veuillez accepter les conditions de réservation.'); return; }
+    const guestsCount = parseInt(gu, 10);
+    if (Number.isNaN(guestsCount)) { alert('Nombre de couverts invalide.'); return; }
+
     const btn = e.target.querySelector('[type="submit"]');
+    const originalText = btn.textContent;
     btn.textContent = 'Traitement...'; btn.disabled = true;
-    await new Promise(r => setTimeout(r, 1500));
-    document.getElementById('resRef').textContent = 'MDY-' + Date.now().toString().slice(-6);
-    document.getElementById('resForm').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
+
+    try {
+      const payload = {
+        firstName: fn,
+        lastName: document.getElementById('lastName').value,
+        email: em,
+        phone: ph,
+        reservationDate: dt,
+        reservationTime: ti + ':00',
+        guestsCount,
+        occasion: document.getElementById('occasion').value || null,
+        preorder: document.getElementById('preorder').value || null,
+        specialRequests: document.getElementById('requests').value || null
+      };
+
+      const response = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(body.message || 'Impossible d\'enregistrer la réservation.');
+      }
+
+      document.getElementById('resRef').textContent = body.referenceCode;
+      document.getElementById('resForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    } catch (error) {
+      alert(error.message || 'Une erreur est survenue.');
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
   });
 </script>
 </body>
