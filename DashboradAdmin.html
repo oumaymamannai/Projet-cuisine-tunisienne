@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carthélys – Tableau de Bord</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="styleAdmin.css"/>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="logo-emblem">☽</span>
+    <div class="logo-text">
+      <span class="logo-main">Carthélys</span>
+      <span class="logo-sub">Espace Admin</span>
+    </div>
+  </div>
+  <div class="sidebar-role">Responsable Restaurant</div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <a href="DashboradAdmin.html"     class="active" data-page="DashboradAdmin.html">    <i class="fas fa-chart-line"></i>    Tableau de Bord</a>
+    <a href="resAdmin.html"  data-page="resAdmin.html">                <i class="fas fa-calendar-check"></i> Réservations    <span class="badge">3</span></a>
+    <a href="reviwAdmin.html"       data-page="reviwAdmin.html">                     <i class="fas fa-star"></i>           Avis Clients    <span class="badge">5</span></a>
+    <div class="nav-section-label">Gestion</div>
+    <a href="contactAdmin.html"      data-page="contactAdmin.html">                    <i class="fas fa-envelope"></i>       Messages        <span class="badge">2</span></a>
+    <a href="MenuAdmin.html"          data-page="MenuAdmin.html">                        <i class="fas fa-utensils"></i>       Menu</a>
+    <div class="nav-section-label">Paramètres</div>
+    <a href="settingsAdmin.html"      data-page="settingsAdmin.html">                    <i class="fas fa-cog"></i>            Paramètres</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-avatar">YM</div>
+    <div class="sidebar-user">
+      <strong>Yasmine Mbarki</strong>
+      <span>Chef Responsable</span>
+    </div>
+    <i class="fas fa-sign-out-alt logout-btn" title="Déconnexion"></i>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <div class="hamburger-admin" id="hamburgerAdmin"><span></span><span></span><span></span></div>
+      <div class="topbar-title">☽ Tableau de Bord</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-time" id="clock"></span>
+      <div class="topbar-notif" title="Notifications">
+        <i class="fas fa-bell" style="font-size:0.9rem;color:var(--text-light);"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <a href="#" class="btn-sm outline" style="font-size:0.62rem;" target="_blank">
+        <i class="fas fa-external-link-alt" style="margin-right:5px;"></i>Voir le Site
+      </a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Réservations aujourd'hui</div>
+        <div class="stat-val">14</div>
+        <div class="stat-sub up"><i class="fas fa-arrow-up"></i> +3 vs hier</div>
+        <i class="fas fa-calendar-check stat-icon"></i>
+      </div>
+      <div class="stat-card olive">
+        <div class="stat-label">Couverts ce soir</div>
+        <div class="stat-val">47</div>
+        <div class="stat-sub up"><i class="fas fa-arrow-up"></i> Soirée chargée</div>
+        <i class="fas fa-users stat-icon"></i>
+      </div>
+      <div class="stat-card spice">
+        <div class="stat-label">Note moyenne</div>
+        <div class="stat-val">4.8</div>
+        <div class="stat-sub" style="color:var(--spice);">★★★★★ sur 5</div>
+        <i class="fas fa-star stat-icon"></i>
+      </div>
+      <div class="stat-card night">
+        <div class="stat-label">Messages non lus</div>
+        <div class="stat-val">7</div>
+        <div class="stat-sub down"><i class="fas fa-envelope"></i> 5 avis · 2 contacts</div>
+        <i class="fas fa-inbox stat-icon"></i>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Chart -->
+      <div class="chart-card">
+        <div class="chart-title">Réservations – 7 derniers jours</div>
+        <div class="mini-chart" id="miniChart"></div>
+        <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;">
+          <div style="font-size:0.72rem;color:var(--text-light);">Total semaine : <strong style="color:var(--night);">82 réservations</strong></div>
+          <div style="font-size:0.72rem;color:var(--text-light);">Moyenne : <strong style="color:var(--night);">11.7 / jour</strong></div>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="chart-card">
+        <div class="chart-title">Activité Récente</div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div>
+              <div class="activity-text"><strong>Nadia Belhaj</strong> a réservé pour 4 personnes</div>
+              <div class="activity-time">Il y a 12 min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot olive"></div>
+            <div>
+              <div class="activity-text">Nouvel avis ★★★★★ de <strong>Pierre Leblanc</strong></div>
+              <div class="activity-time">Il y a 34 min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot spice"></div>
+            <div>
+              <div class="activity-text"><strong>Amira Khelifi</strong> a annulé sa réservation (dim. 25)</div>
+              <div class="activity-time">Il y a 1h 15min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div>
+              <div class="activity-text">Nouveau message de <strong>Hamza Triki</strong> – Événement privé</div>
+              <div class="activity-time">Il y a 2h 03min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot olive"></div>
+            <div>
+              <div class="activity-text">Réservation confirmée pour <strong>Sonia Zarrouk</strong> × 6</div>
+              <div class="activity-time">Il y a 3h 18min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot spice"></div>
+            <div>
+              <div class="activity-text">Avis ★★★ reçu – en attente de réponse</div>
+              <div class="activity-time">Il y a 5h 42min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="navAdmin.js"></script>
+<script>
+  // Mini bar chart
+  (function() {
+    const days   = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+    const values = [8, 12, 10, 14, 15, 18, 5];
+    const max    = Math.max(...values);
+    const chart  = document.getElementById('miniChart');
+    days.forEach((d, i) => {
+      const h    = Math.max(8, Math.round((values[i] / max) * 110));
+      const wrap = document.createElement('div');
+      wrap.className = 'bar-wrap';
+      wrap.innerHTML = `<div class="bar" style="height:${h}px;" title="${values[i]} réservations"></div><span class="bar-label">${d}</span>`;
+      chart.appendChild(wrap);
+    });
+  })();
+</script>
+</body>
+</html>

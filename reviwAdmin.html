@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carthélys – Avis Clients</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="styleAdmin.css"/>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="logo-emblem">☽</span>
+    <div class="logo-text">
+      <span class="logo-main">Carthélys</span>
+      <span class="logo-sub">Espace Admin</span>
+    </div>
+  </div>
+  <div class="sidebar-role">Responsable Restaurant</div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <a href="DashboradAdmin.html"    data-page="DashboradAdmin.html">    <i class="fas fa-chart-line"></i>    Tableau de Bord</a>
+    <a href="resAdmin.html" data-page="resAdmin.html"> <i class="fas fa-calendar-check"></i> Réservations <span class="badge">3</span></a>
+    <a href="reviwAdmin.html"      class="active" data-page="reviwAdmin.html"><i class="fas fa-star"></i> Avis Clients <span class="badge">5</span></a>
+    <div class="nav-section-label">Gestion</div>
+    <a href="contactAdmin.html"     data-page="contactAdmin.html">     <i class="fas fa-envelope"></i>       Messages <span class="badge">2</span></a>
+    <a href="MenuAdmin.html"         data-page="MenuAdmin.html">         <i class="fas fa-utensils"></i>       Menu</a>
+    <div class="nav-section-label">Paramètres</div>
+    <a href="settingsAdmin.html"     data-page="settingsAdmin.html">     <i class="fas fa-cog"></i>            Paramètres</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-avatar">YM</div>
+    <div class="sidebar-user">
+      <strong>Yasmine Mbarki</strong>
+      <span>Chef Responsable</span>
+    </div>
+    <i class="fas fa-sign-out-alt logout-btn" title="Déconnexion"></i>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <div class="hamburger-admin" id="hamburgerAdmin"><span></span><span></span><span></span></div>
+      <div class="topbar-title">☽ Avis Clients</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-time" id="clock"></span>
+      <div class="topbar-notif" title="Notifications">
+        <i class="fas fa-bell" style="font-size:0.9rem;color:var(--text-light);"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <a href="#" class="btn-sm outline" style="font-size:0.62rem;" target="_blank">
+        <i class="fas fa-external-link-alt" style="margin-right:5px;"></i>Voir le Site
+      </a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section-header">
+      <h2>Avis <em>Clients</em></h2>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <select class="filter-select" id="filterRating" onchange="filterReviews()">
+          <option value="">Toutes notes</option>
+          <option value="5">★★★★★</option>
+          <option value="4">★★★★</option>
+          <option value="3">★★★</option>
+          <option value="1">≤ ★★</option>
+        </select>
+        <select class="filter-select" id="filterReviewed" onchange="filterReviews()">
+          <option value="">Tous</option>
+          <option value="no">Non répondus</option>
+          <option value="yes">Répondus</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Rating summary -->
+    <div style="background:var(--white);padding:1.5rem;display:flex;gap:3rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-family:var(--ff-display);font-size:3.5rem;color:var(--night);line-height:1;">4.8</div>
+        <div style="color:var(--spice);font-size:1.1rem;margin:0.25rem 0;">★★★★★</div>
+        <div style="font-size:0.72rem;color:var(--text-light);letter-spacing:2px;">127 AVIS</div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="display:flex;flex-direction:column;gap:0.5rem;" id="ratingBars"></div>
+      </div>
+    </div>
+
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div><!-- /content -->
+</main>
+
+<!-- ===== MODAL : REVIEW RESPONSE ===== -->
+<div class="modal-overlay" id="modalReview">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Répondre à l'Avis</h3>
+      <button class="modal-close" onclick="closeModal('modalReview')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <span class="modal-label">Avis de</span>
+        <span class="modal-val" id="rName">—</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-label">Message</span>
+        <p style="font-family:var(--ff-body);font-style:italic;color:var(--text-light);font-size:0.9rem;line-height:1.7;" id="rText">—</p>
+      </div>
+      <div class="modal-row" style="margin-top:1rem;">
+        <span class="modal-label">Votre réponse</span>
+        <textarea class="modal-textarea" id="rResponse" placeholder="Cher(e) client(e), merci pour votre avis..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm outline" onclick="closeModal('modalReview')">Annuler</button>
+      <button class="btn-sm" onclick="sendResponse()"><i class="fas fa-paper-plane" style="margin-right:5px;"></i>Envoyer la réponse</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="navAdmin.js"></script>
+<script>
+  const reviews = [
+    { id:1, name:'Nadia Belhaj',    initials:'NB', stars:5, source:'Google',      subject:'Expérience exceptionnelle',      text:"Le meilleur couscous que j'aie mangé de ma vie. Le bouillon est d'une profondeur incroyable. On se croirait chez une grand-mère tunisienne de talent.",                                       date:'il y a 2 jours',  responded:false },
+    { id:2, name:'Pierre Leblanc',  initials:'PL', stars:5, source:'TripAdvisor', subject:'La méchouia royale – un festival', text:'La méchouia royale était un festival de saveurs. Le thon de Sfax fond sur la langue. Un restaurant qui rend justice à la richesse de la cuisine tunisienne.',                        date:'il y a 3 jours',  responded:true  },
+    { id:3, name:'Amira Khelifi',   initials:'AK', stars:5, source:'Google',      subject:'Tajine sublime',                  text:"L'agneau au tajine de Djerba était absolument sublime. La harissa maison a une profondeur de goût qu'on ne trouve nulle part ailleurs. Incontournable !",                          date:'il y a 5 jours',  responded:false },
+    { id:4, name:'Hamza Triki',     initials:'HT', stars:3, source:'Direct',      subject:'Bien, mais service lent',         text:"La nourriture était très bonne, la qualité est là, mais nous avons attendu longtemps entre les plats. L'ambiance est magnifique. Reviendrai en semaine.",                           date:'il y a 1 sem.',   responded:false },
+    { id:5, name:'Sonia Zarrouk',   initials:'SZ', stars:5, source:'Facebook',    subject:'Soirée de fiançailles parfaite',  text:"Vous avez rendu notre soirée de fiançailles magique ! La décoration était sublime, le menu exceptionnel, et le personnel d'une gentillesse rare. Mille mercis !",                  date:'il y a 1 sem.',   responded:true  },
+    { id:6, name:'Jean-Marc Dupont',initials:'JD', stars:4, source:'Google',      subject:'Très bon restaurant',             text:'Excellente cuisine tunisienne, authentique et raffinée. Le couscous est délicieux. Légèrement bruyant le samedi soir. Je recommande vivement.',                                    date:'il y a 2 sem.',   responded:false },
+    { id:7, name:'Lina Baccouche',  initials:'LB', stars:5, source:'TripAdvisor', subject:'Un voyage en Tunisie',            text:'Chaque bouchée est un voyage. Les épices, les textures, les saveurs — tout est maîtrisé à la perfection. Le chef est clairement passionné. Table coup de cœur.',                  date:'il y a 2 sem.',   responded:true  },
+  ];
+
+  let currentReviewId = null;
+
+  // Rating bars
+  (function() {
+    const data  = [{stars:5,count:94},{stars:4,count:21},{stars:3,count:8},{stars:2,count:3},{stars:1,count:1}];
+    const total = data.reduce((a,b) => a+b.count, 0);
+    const rb    = document.getElementById('ratingBars');
+    data.forEach(r => {
+      const pct = Math.round((r.count/total)*100);
+      rb.innerHTML += `<div style="display:flex;align-items:center;gap:0.75rem;font-size:0.75rem;">
+        <span style="color:var(--spice);width:60px;text-align:right;">★ ${r.stars}</span>
+        <div style="flex:1;background:var(--sand2);height:8px;"><div style="width:${pct}%;background:var(--terracotta);height:100%;"></div></div>
+        <span style="color:var(--text-light);width:30px;">${r.count}</span></div>`;
+    });
+  })();
+
+  function renderReviews(data) {
+    const stars = n => '★'.repeat(n) + '☆'.repeat(5-n);
+    document.getElementById('reviewsGrid').innerHTML = data.map(r => `
+      <div class="review-card ${r.responded ? '' : 'unread'}" id="review-${r.id}">
+        <div class="review-header">
+          <div class="review-author">
+            <div class="review-avatar">${r.initials}</div>
+            <div>
+              <span class="review-name">${r.name}</span>
+              <span class="review-date">${r.date}</span>
+            </div>
+          </div>
+          <span class="review-source">${r.source}</span>
+        </div>
+        <div class="review-stars">${stars(r.stars)}</div>
+        <div class="review-subject" style="margin-top:0.75rem;">${r.subject}</div>
+        <p class="review-text">"${r.text}"</p>
+        <div class="review-footer">
+          ${r.responded
+            ? `<span class="review-responded"><i class="fas fa-check-circle"></i> Répondu</span>`
+            : `<button class="review-response-btn" onclick="openReviewModal(${r.id})"><i class="fas fa-reply" style="margin-right:5px;"></i>Répondre</button>`}
+          <span class="status ${r.responded ? 'status-read' : 'status-new'}">${r.responded ? 'Lu' : 'Nouveau'}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterReviews() {
+    const rating  = document.getElementById('filterRating').value;
+    const replied = document.getElementById('filterReviewed').value;
+    let data = [...reviews];
+    if (rating === '1') data = data.filter(r => r.stars <= 2);
+    else if (rating)    data = data.filter(r => r.stars === parseInt(rating, 10));
+    if (replied === 'yes') data = data.filter(r =>  r.responded);
+    if (replied === 'no')  data = data.filter(r => !r.responded);
+    renderReviews(data);
+  }
+
+  function openReviewModal(id) {
+    const r = reviews.find(x => x.id === id);
+    if (!r) return;
+    currentReviewId = id;
+    document.getElementById('rName').textContent = r.name;
+    document.getElementById('rText').textContent = r.text;
+    document.getElementById('rResponse').value   = '';
+    openModal('modalReview');
+  }
+
+  function sendResponse() {
+    const txt = document.getElementById('rResponse').value.trim();
+    if (!txt) { showToast('Veuillez écrire une réponse.', false); return; }
+    const r = reviews.find(x => x.id === currentReviewId);
+    if (r) { r.responded = true; filterReviews(); }
+    closeModal('modalReview');
+    showToast('Réponse envoyée à ' + r.name + ' !', true);
+  }
+
+  renderReviews(reviews);
+</script>
+</body>
+</html>
