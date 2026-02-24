@@ -43,13 +43,13 @@
     <div class="reservation-grid">
       <div class="res-info">
         <p class="section-label">Informations Pratiques</p>
-        <h2>Bienvenue chez <em style="color:var(--gold)">Mondélys</em></h2>
+        <h2>Bienvenue chez <em id="reservationRestaurantName" style="color:var(--gold)">Mondélys</em></h2>
         <p>Réservez votre table en ligne. Nous confirmons toute réservation par SMS dans un délai de 2h. Pour le menu dégustation 7 plats, nous recommandons de réserver 48h à l'avance.</p>
         <div class="res-details">
           <div class="res-detail">
             <i class="fas fa-clock"></i>
             <div><strong>Horaires</strong>
-            <span>Mar–Ven : 12h–15h / 19h–23h<br/>Sam–Dim : 12h–16h / 19h–23h30</span></div>
+            <span id="reservationHoursValue">Mar–Ven : 12h–15h / 19h–23h<br/>Sam–Dim : 12h–16h / 19h–23h30</span></div>
           </div>
           <div class="res-detail">
             <i class="fas fa-globe"></i>
@@ -162,7 +162,7 @@
             <textarea id="requests" placeholder="Allergies, régime alimentaire, occasion spéciale, chaise haute, préférences de table (terrasse, fenêtre, salon privé)..."></textarea>
           </div>
           <div class="form-group" style="flex-direction: row; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.5rem;">
-            <input type="checkbox" id="terms" style="width: auto; margin-top: 4px;" required/>
+            <input type="checkbox" id="terms" style="width: auto; margin-top: 4px; accent-color: var(--gold); -webkit-appearance: checkbox; appearance: checkbox;" required/>
             <label for="terms" style="text-transform: none; letter-spacing: 0; font-size: 0.9rem; font-family: var(--ff-body); cursor: pointer;">
               J'accepte les conditions de réservation et la politique d'annulation (24h avant).
             </label>
@@ -230,6 +230,7 @@
 </footer>
 
 <script src="main.js"></script>
+<script src="publicSettings.js"></script>
 <script>
   document.getElementById('date').min = new Date().toISOString().split('T')[0];
   document.getElementById('resForm').addEventListener('submit', async (e) => {

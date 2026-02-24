@@ -1,7 +1,9 @@
 package tn.mondelys.backend.config;
 
 import tn.mondelys.backend.model.Admin;
+import tn.mondelys.backend.model.AppSettings;
 import tn.mondelys.backend.repository.AdminRepository;
+import tn.mondelys.backend.repository.AppSettingsRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -10,10 +12,12 @@ import org.springframework.stereotype.Component;
 public class DataInitializer implements CommandLineRunner {
 
     private final AdminRepository adminRepository;
+    private final AppSettingsRepository appSettingsRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(AdminRepository adminRepository, AppSettingsRepository appSettingsRepository, PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
+        this.appSettingsRepository = appSettingsRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -26,6 +30,12 @@ public class DataInitializer implements CommandLineRunner {
             admin.setFullName("Mondelys Admin");
             admin.setRole("ADMIN");
             return adminRepository.save(admin);
+        });
+
+        appSettingsRepository.findById(1L).orElseGet(() -> {
+            AppSettings settings = new AppSettings();
+            settings.setId(1L);
+            return appSettingsRepository.save(settings);
         });
     }
 }

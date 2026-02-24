@@ -488,6 +488,7 @@
     </footer>
 
     <script src="main.js"></script>
+    <script src="publicSettings.js"></script>
     <script>
       document.querySelectorAll(".faq-question").forEach((q) => {
         q.addEventListener("click", () => {
@@ -503,11 +504,19 @@
         .getElementById("contactForm")
         .addEventListener("submit", async (e) => {
           e.preventDefault();
+          const firstName = document.getElementById("cFn").value.trim();
+          const lastName = document.getElementById("cLn").value.trim();
+          const email = document.getElementById("cEm").value.trim();
+          const phone = document.getElementById("cPh").value.trim();
+          const subject = document.getElementById("cSu").value.trim();
+          const message = document.getElementById("cMs").value.trim();
+
           if (
-            !document.getElementById("cFn").value ||
-            !document.getElementById("cEm").value ||
-            !document.getElementById("cSu").value ||
-            !document.getElementById("cMs").value
+            !firstName ||
+            !lastName ||
+            !email ||
+            !subject ||
+            !message
           ) {
             alert("Veuillez remplir tous les champs obligatoires.");
             return;
@@ -519,9 +528,26 @@
           const btn = e.target.querySelector('[type="submit"]');
           btn.textContent = "Envoi...";
           btn.disabled = true;
-          await new Promise((r) => setTimeout(r, 1500));
-          document.getElementById("contactForm").style.display = "none";
-          document.getElementById("contactSuccess").style.display = "block";
+
+          try {
+            const response = await fetch('/api/contact-messages', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ firstName, lastName, email, phone, subject, message })
+            });
+
+            if (!response.ok) {
+              const body = await response.json().catch(() => ({}));
+              throw new Error(body.message || 'Erreur lors de l\'envoi du message');
+            }
+
+            document.getElementById("contactForm").style.display = "none";
+            document.getElementById("contactSuccess").style.display = "block";
+          } catch (error) {
+            alert(error.message || 'Erreur serveur');
+            btn.textContent = "Envoyer";
+            btn.disabled = false;
+          }
         });
     </script>
   </body>

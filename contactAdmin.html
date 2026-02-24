@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carthélys – Messages</title>
+  <title>Mondélys – Messages</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="styleAdmin.css"/>
@@ -15,7 +15,7 @@
   <div class="sidebar-brand">
     <span class="logo-emblem">☽</span>
     <div class="logo-text">
-      <span class="logo-main">Carthélys</span>
+      <span class="logo-main">Mondélys</span>
       <span class="logo-sub">Espace Admin</span>
     </div>
   </div>
@@ -53,7 +53,7 @@
         <i class="fas fa-bell" style="font-size:0.9rem;color:var(--text-light);"></i>
         <span class="notif-dot"></span>
       </div>
-      <a href="#" class="btn-sm outline" style="font-size:0.62rem;" target="_blank">
+      <a href="/" class="btn-sm outline" style="font-size:0.62rem;" target="_blank" rel="noopener noreferrer">
         <i class="fas fa-external-link-alt" style="margin-right:5px;"></i>Voir le Site
       </a>
     </div>
@@ -136,32 +136,34 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
+<script src="adminApi.js"></script>
 <script src="navAdmin.js"></script>
 <script>
-  const contacts = [
-    { id:1, date:'2026-02-22', name:'Hamza Triki',   email:'hamza.t@outlook.com', subject:'Événement privé / Mariage',  message:"Bonjour, nous cherchons à organiser un mariage pour 50 personnes en mai prochain dans votre restaurant. Pouvez-vous nous contacter pour discuter des formules disponibles ?", status:'new'  },
-    { id:2, date:'2026-02-21', name:'Faten Jedidi',  email:'faten@email.tn',      subject:'Menu & Allergies',            message:'Avez-vous des options sans lactose pour votre menu couscous ? Ma fille est intolérante et nous souhaitons réserver pour son anniversaire la semaine prochaine.',            status:'new'  },
-    { id:3, date:'2026-02-20', name:'Paul Martin',   email:'paul.martin@mail.fr', subject:'Partenariat professionnel',   message:"Je représente un guide gastronomique international et souhaite vous rencontrer pour une possible inclusion dans notre prochain numéro. Seriez-vous disponible ?",           status:'read' },
-    { id:4, date:'2026-02-19', name:'Radhia Chaabi', email:'radhia.c@email.tn',   subject:'Iftar Ramadan',               message:'Quels sont vos menus spéciaux pour le Ramadan cette année ? Nous sommes un groupe de 20 personnes et souhaitons réserver pour plusieurs soirées.',                         status:'read' },
-  ];
+  ensureAdminAuthenticated();
 
-  let filteredContacts = [...contacts];
+  let contacts = [];
+
+  let filteredContacts = [];
   let currentContactId = null;
+
+  function formatDate(value) {
+    if (!value) return '—';
+    return new Date(value).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
 
   function renderContacts(data) {
     document.getElementById('contactBody').innerHTML = data.map(c => `
       <tr>
-        <td style="font-size:0.8rem;color:var(--text-light);">${c.date}</td>
-        <td><strong>${c.name}</strong></td>
+        <td style="font-size:0.8rem;color:var(--text-light);">${formatDate(c.createdAt)}</td>
+        <td><strong>${c.firstName} ${c.lastName}</strong></td>
         <td style="font-size:0.82rem;">${c.email}</td>
         <td style="font-size:0.82rem;">${c.subject}</td>
         <td style="font-size:0.82rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.message}</td>
-        <td><span class="status ${c.status === 'new' ? 'status-new' : 'status-read'}">${c.status === 'new' ? 'Nouveau' : 'Lu'}</span></td>
+        <td><span class="status ${c.readByAdmin ? 'status-read' : 'status-new'}">${c.readByAdmin ? 'Lu' : 'Nouveau'}</span></td>
         <td>
           <div class="action-btns">
             <button class="action-btn"         title="Voir"      onclick="openContactModal(${c.id})"><i class="fas fa-eye"></i></button>
             <button class="action-btn success"  title="Répondre" onclick="openContactModal(${c.id})"><i class="fas fa-reply"></i></button>
-            <button class="action-btn danger"   title="Supprimer" onclick="deleteContact(${c.id})"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>
@@ -173,50 +175,68 @@
     const subject = document.getElementById('filterSubject').value;
     const status  = document.getElementById('filterMsgStatus').value;
     filteredContacts = contacts.filter(c => {
-      const matchSearch  = !search  || c.name.toLowerCase().includes(search) || c.email.toLowerCase().includes(search) || c.message.toLowerCase().includes(search);
+      const fullName = `${c.firstName} ${c.lastName}`.toLowerCase();
+      const matchSearch  = !search  || fullName.includes(search) || c.email.toLowerCase().includes(search) || c.message.toLowerCase().includes(search);
       const matchSubject = !subject || c.subject === subject;
-      const matchStatus  = !status  || c.status === status;
+      const matchStatus  = !status  || (status === 'new' ? !c.readByAdmin : c.readByAdmin);
       return matchSearch && matchSubject && matchStatus;
     });
     renderContacts(filteredContacts);
   }
 
-  function openContactModal(id) {
+  async function openContactModal(id) {
     const c = contacts.find(x => x.id === id);
     if (!c) return;
     currentContactId = id;
-    c.status = 'read';
+
+    if (!c.readByAdmin) {
+      try {
+        await adminFetch(`/api/admin/contact-messages/${id}/read`, { method: 'PATCH' });
+        c.readByAdmin = true;
+      } catch (error) {
+        showToast(error.message || 'Erreur serveur', false);
+      }
+    }
+
     renderContacts(filteredContacts);
-    document.getElementById('cName').textContent    = c.name;
-    document.getElementById('cDate').textContent    = c.date;
+    document.getElementById('cName').textContent    = `${c.firstName} ${c.lastName}`;
+    document.getElementById('cDate').textContent    = formatDate(c.createdAt);
     document.getElementById('cEmail').textContent   = c.email;
     document.getElementById('cSubject').textContent = c.subject;
     document.getElementById('cMessage').textContent = c.message;
-    document.getElementById('cResponse').value      = '';
+    document.getElementById('cResponse').value      = c.adminResponse || '';
     openModal('modalContact');
   }
 
-  function sendContactResponse() {
+  async function sendContactResponse() {
     const txt = document.getElementById('cResponse').value.trim();
     if (!txt) { showToast('Veuillez écrire une réponse.', false); return; }
     const c = contacts.find(x => x.id === currentContactId);
-    closeModal('modalContact');
-    showToast('Réponse envoyée à ' + c.email + ' !', true);
-    // API: fetch('/api/contacts/' + currentContactId + '/respond', { method: 'POST', body: JSON.stringify({ response: txt }) })
-  }
 
-  function deleteContact(id) {
-    const idx = contacts.findIndex(x => x.id === id);
-    if (idx !== -1) {
-      const name = contacts[idx].name;
-      contacts.splice(idx, 1);
-      filteredContacts = filteredContacts.filter(c => c.id !== id);
-      renderContacts(filteredContacts);
-      showToast('Message de ' + name + ' supprimé.', false);
+    try {
+      await adminFetch(`/api/admin/contact-messages/${currentContactId}/respond`, {
+        method: 'POST',
+        body: JSON.stringify({ response: txt })
+      });
+
+      closeModal('modalContact');
+      showToast('Réponse envoyée à ' + c.email + ' !', true);
+      await loadContacts();
+    } catch (error) {
+      showToast(error.message || 'Erreur serveur', false);
     }
   }
 
-  renderContacts(contacts);
+  async function loadContacts() {
+    try {
+      contacts = await adminFetch('/api/admin/contact-messages');
+      filterContacts();
+    } catch (error) {
+      showToast(error.message || 'Erreur de chargement', false);
+    }
+  }
+
+  loadContacts();
 </script>
 </body>
 </html>

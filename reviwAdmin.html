@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carthélys – Avis Clients</title>
+  <title>Mondélys – Avis Clients</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="styleAdmin.css"/>
@@ -15,7 +15,7 @@
   <div class="sidebar-brand">
     <span class="logo-emblem">☽</span>
     <div class="logo-text">
-      <span class="logo-main">Carthélys</span>
+      <span class="logo-main">Mondélys</span>
       <span class="logo-sub">Espace Admin</span>
     </div>
   </div>
@@ -53,7 +53,7 @@
         <i class="fas fa-bell" style="font-size:0.9rem;color:var(--text-light);"></i>
         <span class="notif-dot"></span>
       </div>
-      <a href="#" class="btn-sm outline" style="font-size:0.62rem;" target="_blank">
+      <a href="/" class="btn-sm outline" style="font-size:0.62rem;" target="_blank" rel="noopener noreferrer">
         <i class="fas fa-external-link-alt" style="margin-right:5px;"></i>Voir le Site
       </a>
     </div>
@@ -81,9 +81,9 @@
     <!-- Rating summary -->
     <div style="background:var(--white);padding:1.5rem;display:flex;gap:3rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;">
       <div style="text-align:center;">
-        <div style="font-family:var(--ff-display);font-size:3.5rem;color:var(--night);line-height:1;">4.8</div>
+        <div id="avgRating" style="font-family:var(--ff-display);font-size:3.5rem;color:var(--night);line-height:1;">0.0</div>
         <div style="color:var(--spice);font-size:1.1rem;margin:0.25rem 0;">★★★★★</div>
-        <div style="font-size:0.72rem;color:var(--text-light);letter-spacing:2px;">127 AVIS</div>
+        <div id="totalReviewsCount" style="font-size:0.72rem;color:var(--text-light);letter-spacing:2px;">0 AVIS</div>
       </div>
       <div style="flex:1;min-width:200px;">
         <div style="display:flex;flex-direction:column;gap:0.5rem;" id="ratingBars"></div>
@@ -124,33 +124,61 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
+<script src="adminApi.js"></script>
 <script src="navAdmin.js"></script>
 <script>
-  const reviews = [
-    { id:1, name:'Nadia Belhaj',    initials:'NB', stars:5, source:'Google',      subject:'Expérience exceptionnelle',      text:"Le meilleur couscous que j'aie mangé de ma vie. Le bouillon est d'une profondeur incroyable. On se croirait chez une grand-mère tunisienne de talent.",                                       date:'il y a 2 jours',  responded:false },
-    { id:2, name:'Pierre Leblanc',  initials:'PL', stars:5, source:'TripAdvisor', subject:'La méchouia royale – un festival', text:'La méchouia royale était un festival de saveurs. Le thon de Sfax fond sur la langue. Un restaurant qui rend justice à la richesse de la cuisine tunisienne.',                        date:'il y a 3 jours',  responded:true  },
-    { id:3, name:'Amira Khelifi',   initials:'AK', stars:5, source:'Google',      subject:'Tajine sublime',                  text:"L'agneau au tajine de Djerba était absolument sublime. La harissa maison a une profondeur de goût qu'on ne trouve nulle part ailleurs. Incontournable !",                          date:'il y a 5 jours',  responded:false },
-    { id:4, name:'Hamza Triki',     initials:'HT', stars:3, source:'Direct',      subject:'Bien, mais service lent',         text:"La nourriture était très bonne, la qualité est là, mais nous avons attendu longtemps entre les plats. L'ambiance est magnifique. Reviendrai en semaine.",                           date:'il y a 1 sem.',   responded:false },
-    { id:5, name:'Sonia Zarrouk',   initials:'SZ', stars:5, source:'Facebook',    subject:'Soirée de fiançailles parfaite',  text:"Vous avez rendu notre soirée de fiançailles magique ! La décoration était sublime, le menu exceptionnel, et le personnel d'une gentillesse rare. Mille mercis !",                  date:'il y a 1 sem.',   responded:true  },
-    { id:6, name:'Jean-Marc Dupont',initials:'JD', stars:4, source:'Google',      subject:'Très bon restaurant',             text:'Excellente cuisine tunisienne, authentique et raffinée. Le couscous est délicieux. Légèrement bruyant le samedi soir. Je recommande vivement.',                                    date:'il y a 2 sem.',   responded:false },
-    { id:7, name:'Lina Baccouche',  initials:'LB', stars:5, source:'TripAdvisor', subject:'Un voyage en Tunisie',            text:'Chaque bouchée est un voyage. Les épices, les textures, les saveurs — tout est maîtrisé à la perfection. Le chef est clairement passionné. Table coup de cœur.',                  date:'il y a 2 sem.',   responded:true  },
-  ];
+  ensureAdminAuthenticated();
+
+  let reviews = [];
 
   let currentReviewId = null;
 
-  // Rating bars
-  (function() {
-    const data  = [{stars:5,count:94},{stars:4,count:21},{stars:3,count:8},{stars:2,count:3},{stars:1,count:1}];
-    const total = data.reduce((a,b) => a+b.count, 0);
-    const rb    = document.getElementById('ratingBars');
-    data.forEach(r => {
-      const pct = Math.round((r.count/total)*100);
-      rb.innerHTML += `<div style="display:flex;align-items:center;gap:0.75rem;font-size:0.75rem;">
-        <span style="color:var(--spice);width:60px;text-align:right;">★ ${r.stars}</span>
-        <div style="flex:1;background:var(--sand2);height:8px;"><div style="width:${pct}%;background:var(--terracotta);height:100%;"></div></div>
-        <span style="color:var(--text-light);width:30px;">${r.count}</span></div>`;
+  function initials(name) {
+    return String(name || '')
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0].toUpperCase())
+      .join('') || 'CL';
+  }
+
+  function formatDate(isoDate) {
+    if (!isoDate) return '—';
+    return new Date(isoDate).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
     });
-  })();
+  }
+
+  function updateRatingSummary(data) {
+    const bars = document.getElementById('ratingBars');
+    const avgNode = document.getElementById('avgRating');
+    const totalNode = document.getElementById('totalReviewsCount');
+    if (!bars) return;
+
+    const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    data.forEach((review) => {
+      counts[review.rating] = (counts[review.rating] || 0) + 1;
+    });
+
+    const total = data.length || 1;
+    const average = data.length
+      ? (data.reduce((sum, review) => sum + review.rating, 0) / data.length).toFixed(1)
+      : '0.0';
+
+    if (avgNode) avgNode.textContent = average;
+    if (totalNode) totalNode.textContent = `${data.length} AVIS`;
+
+    bars.innerHTML = [5, 4, 3, 2, 1].map((star) => {
+      const count = counts[star] || 0;
+      const pct = Math.round((count / total) * 100);
+      return `<div style="display:flex;align-items:center;gap:0.75rem;font-size:0.75rem;">
+        <span style="color:var(--spice);width:60px;text-align:right;">★ ${star}</span>
+        <div style="flex:1;background:var(--sand2);height:8px;"><div style="width:${pct}%;background:var(--terracotta);height:100%;"></div></div>
+        <span style="color:var(--text-light);width:30px;">${count}</span></div>`;
+    }).join('');
+  }
 
   function renderReviews(data) {
     const stars = n => '★'.repeat(n) + '☆'.repeat(5-n);
@@ -158,17 +186,17 @@
       <div class="review-card ${r.responded ? '' : 'unread'}" id="review-${r.id}">
         <div class="review-header">
           <div class="review-author">
-            <div class="review-avatar">${r.initials}</div>
+            <div class="review-avatar">${initials(r.fullName)}</div>
             <div>
-              <span class="review-name">${r.name}</span>
-              <span class="review-date">${r.date}</span>
+              <span class="review-name">${r.fullName}</span>
+              <span class="review-date">${formatDate(r.createdAt)}</span>
             </div>
           </div>
-          <span class="review-source">${r.source}</span>
+          <span class="review-source">Site</span>
         </div>
-        <div class="review-stars">${stars(r.stars)}</div>
-        <div class="review-subject" style="margin-top:0.75rem;">${r.subject}</div>
-        <p class="review-text">"${r.text}"</p>
+        <div class="review-stars">${stars(r.rating)}</div>
+        <div class="review-subject" style="margin-top:0.75rem;">${r.title || 'Avis client'}</div>
+        <p class="review-text">"${r.message}"</p>
         <div class="review-footer">
           ${r.responded
             ? `<span class="review-responded"><i class="fas fa-check-circle"></i> Répondu</span>`
@@ -183,8 +211,8 @@
     const rating  = document.getElementById('filterRating').value;
     const replied = document.getElementById('filterReviewed').value;
     let data = [...reviews];
-    if (rating === '1') data = data.filter(r => r.stars <= 2);
-    else if (rating)    data = data.filter(r => r.stars === parseInt(rating, 10));
+    if (rating === '1') data = data.filter(r => r.rating <= 2);
+    else if (rating)    data = data.filter(r => r.rating === parseInt(rating, 10));
     if (replied === 'yes') data = data.filter(r =>  r.responded);
     if (replied === 'no')  data = data.filter(r => !r.responded);
     renderReviews(data);
@@ -194,22 +222,40 @@
     const r = reviews.find(x => x.id === id);
     if (!r) return;
     currentReviewId = id;
-    document.getElementById('rName').textContent = r.name;
-    document.getElementById('rText').textContent = r.text;
+    document.getElementById('rName').textContent = r.fullName;
+    document.getElementById('rText').textContent = r.message;
     document.getElementById('rResponse').value   = '';
     openModal('modalReview');
   }
 
-  function sendResponse() {
+  async function sendResponse() {
     const txt = document.getElementById('rResponse').value.trim();
     if (!txt) { showToast('Veuillez écrire une réponse.', false); return; }
-    const r = reviews.find(x => x.id === currentReviewId);
-    if (r) { r.responded = true; filterReviews(); }
-    closeModal('modalReview');
-    showToast('Réponse envoyée à ' + r.name + ' !', true);
+
+    try {
+      await adminFetch(`/api/admin/reviews/${currentReviewId}/respond`, {
+        method: 'PATCH',
+        body: JSON.stringify({ response: txt })
+      });
+      await loadReviews();
+      closeModal('modalReview');
+      showToast('Réponse envoyée avec succès !', true);
+    } catch (error) {
+      showToast(error.message || 'Erreur serveur', false);
+    }
   }
 
-  renderReviews(reviews);
+  async function loadReviews() {
+    try {
+      reviews = await adminFetch('/api/admin/reviews');
+      updateRatingSummary(reviews);
+      filterReviews();
+    } catch (error) {
+      showToast(error.message || 'Erreur de chargement', false);
+    }
+  }
+
+  loadReviews();
 </script>
 </body>
 </html>

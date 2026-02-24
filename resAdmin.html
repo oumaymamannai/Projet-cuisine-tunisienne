@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carthélys – Réservations</title>
+  <title>Mondélys – Réservations</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="styleAdmin.css"/>
@@ -15,7 +15,7 @@
   <div class="sidebar-brand">
     <span class="logo-emblem">☽</span>
     <div class="logo-text">
-      <span class="logo-main">Carthélys</span>
+      <span class="logo-main">Mondélys</span>
       <span class="logo-sub">Espace Admin</span>
     </div>
   </div>
@@ -53,7 +53,7 @@
         <i class="fas fa-bell" style="font-size:0.9rem;color:var(--text-light);"></i>
         <span class="notif-dot"></span>
       </div>
-      <a href="#" class="btn-sm outline" style="font-size:0.62rem;" target="_blank">
+      <a href="/" class="btn-sm outline" style="font-size:0.62rem;" target="_blank" rel="noopener noreferrer">
         <i class="fas fa-external-link-alt" style="margin-right:5px;"></i>Voir le Site
       </a>
     </div>
@@ -324,7 +324,7 @@
     const blob    = new Blob([csv], { type: 'text/csv' });
     const url     = URL.createObjectURL(blob);
     const a       = document.createElement('a');
-    a.href = url; a.download = 'reservations-carthelys.csv'; a.click();
+    a.href = url; a.download = 'reservations-mondelys.csv'; a.click();
     URL.revokeObjectURL(url);
     showToast('Export CSV téléchargé !', true);
   }

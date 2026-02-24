@@ -187,31 +187,31 @@
   <div class="container">
     <p class="section-label center">Avis Clients</p>
     <h2 class="section-title center">Ils ont <em>Voyagé</em> avec Nous</h2>
-    <div class="testi-grid">
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p>"Le wagyu japonais était une révélation absolue. En une seule soirée, j'ai eu l'impression de voyager de Tokyo à Paris. Un restaurant comme il n'en existe pas d'autre à Tunis."</p>
-        <div class="testi-author">
-          <img src="https://i.pravatar.cc/50?img=10" alt=""/>
-          <div><strong>Sofia Marchetti</strong><span>Paris, France</span></div>
+    <div class="testi-grid" id="publicReviewsGrid">
+    </div>
+    <div style="max-width:760px;margin:2rem auto 0;background:var(--white);padding:1.5rem;">
+      <h3 style="font-family:var(--ff-display);margin-bottom:1rem;letter-spacing:2px;">Laisser un avis</h3>
+      <form id="reviewForm" style="display:grid;gap:0.8rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+          <input id="reviewName" type="text" placeholder="Nom complet" required style="padding:0.8rem;border:1px solid #ddd;background:#fff;" />
+          <input id="reviewEmail" type="email" placeholder="Email" required style="padding:0.8rem;border:1px solid #ddd;background:#fff;" />
         </div>
-      </div>
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p>"Le biryani hyderabadi était digne d'un grand restaurant d'Inde. On sent que les chefs ont véritablement voyagé et compris l'âme de chaque cuisine. Époustouflant."</p>
-        <div class="testi-author">
-          <img src="https://i.pravatar.cc/50?img=12" alt=""/>
-          <div><strong>Karim Belhadj</strong><span>Tunis, Tunisie</span></div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:0.8rem;">
+          <select id="reviewRating" required style="padding:0.8rem;border:1px solid #ddd;background:#fff;">
+            <option value="">Note</option>
+            <option value="5">★★★★★</option>
+            <option value="4">★★★★☆</option>
+            <option value="3">★★★☆☆</option>
+            <option value="2">★★☆☆☆</option>
+            <option value="1">★☆☆☆☆</option>
+          </select>
+          <input id="reviewTitle" type="text" placeholder="Titre de votre avis" style="padding:0.8rem;border:1px solid #ddd;background:#fff;" />
         </div>
-      </div>
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p>"Le menu dégustation 7 plats était un tour du monde extraordinaire. Le canard à l'orange français avait une profondeur de goût rare. Mondélys est une adresse incontournable."</p>
-        <div class="testi-author">
-          <img src="https://i.pravatar.cc/50?img=20" alt=""/>
-          <div><strong>Leila Trabelsi</strong><span>Sousse, Tunisie</span></div>
+        <textarea id="reviewMessage" placeholder="Votre avis..." required style="padding:0.8rem;border:1px solid #ddd;background:#fff;min-height:110px;"></textarea>
+        <div>
+          <button class="btn btn-gold" type="submit">Publier mon avis</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </section>
@@ -264,5 +264,85 @@
 </footer>
 
 <script src="main.js"></script>
+<script src="publicSettings.js"></script>
+<script>
+  function starText(n) {
+    return '★'.repeat(n) + '☆'.repeat(5 - n);
+  }
+
+  function avatar(name) {
+    const seed = encodeURIComponent((name || 'client').toLowerCase());
+    return `https://api.dicebear.com/9.x/initials/svg?seed=${seed}`;
+  }
+
+  function renderPublicReviews(reviews) {
+    const grid = document.getElementById('publicReviewsGrid');
+    const safe = Array.isArray(reviews) ? reviews.slice(0, 6) : [];
+    if (!safe.length) {
+      grid.innerHTML = '<div class="testi-card"><div class="stars">★★★★★</div><p>"Aucun avis pour le moment. Soyez le premier à partager votre expérience !"</p><div class="testi-author"><img src="https://api.dicebear.com/9.x/initials/svg?seed=mondelys" alt=""/><div><strong>Équipe Mondélys</strong><span>Tunis, Tunisie</span></div></div></div>';
+      return;
+    }
+
+    grid.innerHTML = safe.map((review) => `
+      <div class="testi-card">
+        <div class="stars">${starText(review.rating)}</div>
+        <p>"${review.message}"</p>
+        <div class="testi-author">
+          <img src="${avatar(review.fullName)}" alt="${review.fullName}"/>
+          <div><strong>${review.fullName}</strong><span>${review.title || 'Client Mondélys'}</span></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function loadPublicReviews() {
+    try {
+      const response = await fetch('/api/reviews/public');
+      const reviews = response.ok ? await response.json() : [];
+      renderPublicReviews(reviews);
+    } catch (_) {
+      renderPublicReviews([]);
+    }
+  }
+
+  document.getElementById('reviewForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = event.target.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Publication...';
+
+    const payload = {
+      fullName: document.getElementById('reviewName').value.trim(),
+      email: document.getElementById('reviewEmail').value.trim(),
+      rating: Number(document.getElementById('reviewRating').value),
+      title: document.getElementById('reviewTitle').value.trim(),
+      message: document.getElementById('reviewMessage').value.trim()
+    };
+
+    try {
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.message || 'Erreur lors de la publication');
+      }
+
+      event.target.reset();
+      await loadPublicReviews();
+      alert('Merci ! Votre avis a été publié.');
+    } catch (error) {
+      alert(error.message || 'Erreur serveur');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Publier mon avis';
+    }
+  });
+
+  loadPublicReviews();
+</script>
 </body>
 </html>

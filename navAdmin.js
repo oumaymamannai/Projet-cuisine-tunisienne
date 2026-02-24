@@ -1,34 +1,25 @@
 /* ===========================
-   CARTHÉLYS – nav.js
-   Shared navigation logic
-   (sidebar highlight + clock)
-   =========================== */
+  MONDÉLYS – nav.js
+  Shared navigation logic
+  (sidebar highlight + clock)
+  =========================== */
 
 // Highlight active nav link based on current page filename
 (function highlightNav() {
-  const page = window.location.pathname.split("/").pop() || "index.html";
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll("[data-page]").forEach((link) => {
-    if (link.dataset.page === page) link.classList.add("active");
+    if (link.dataset.page === currentPage) link.classList.add("active");
   });
 })();
 
-(function protectAdminPages() {
-  const adminPages = ["DashboradAdmin.html", "resAdmin.html", "reviwAdmin.html", "contactAdmin.html", "settingsAdmin.html"];
-  const currentPage = window.location.pathname.split("/").pop();
-  if (!adminPages.includes(currentPage)) {
-    return;
-  }
-
-  if (!localStorage.getItem("adminToken")) {
-    window.location.href = "/admin";
-    return;
-  }
-
-  const adminName = localStorage.getItem("adminName");
-  if (adminName) {
-    const userNameEl = document.querySelector(".sidebar-user strong");
-    if (userNameEl) userNameEl.textContent = adminName;
-  }
+(function setupSiteLink() {
+  document.querySelectorAll(".btn-sm.outline").forEach((button) => {
+    if (button.textContent && button.textContent.includes("Voir le Site")) {
+      button.setAttribute("href", "/");
+      button.setAttribute("target", "_blank");
+      button.setAttribute("rel", "noopener noreferrer");
+    }
+  });
 })();
 
 // Mobile hamburger
@@ -86,7 +77,11 @@ document.querySelectorAll(".modal-overlay").forEach((m) => {
 });
 
 document.querySelectorAll(".logout-btn").forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", async () => {
+    try {
+      await fetch("/api/admin/auth/logout", { method: "POST" });
+    } catch (_) {
+    }
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminRole");

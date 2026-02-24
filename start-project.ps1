@@ -1,6 +1,9 @@
 param(
     [string]$DbUser = "root",
     [string]$DbPassword = "",
+    [string]$MailUsername = "",
+    [string]$MailPassword = "",
+    [string]$MailFrom = "",
     [switch]$NoBrowser
 )
 
@@ -21,6 +24,16 @@ function Warn($message) {
 function Fail($message) {
     Write-Host "[ERROR] $message" -ForegroundColor Red
     exit 1
+}
+
+function ConvertTo-PlainText([Security.SecureString]$secureValue) {
+    $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureValue)
+    try {
+        return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)
+    }
+    finally {
+        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
+    }
 }
 
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -102,6 +115,42 @@ catch {
 Step "Lancement backend Spring Boot"
 $env:DB_USERNAME = $DbUser
 $env:DB_PASSWORD = $DbPassword
+
+if (-not $MailUsername) {
+    $MailUsername = $env:MAIL_USERNAME
+}
+if (-not $MailPassword) {
+    $MailPassword = $env:MAIL_PASSWORD
+}
+
+if (-not $MailUsername) {
+    $MailUsername = Read-Host "Email Gmail pour l'envoi des réponses (laisser vide pour ignorer)"
+}
+
+if ($MailUsername -and -not $MailPassword) {
+    $secureMailPassword = Read-Host "Mot de passe d'application Gmail" -AsSecureString
+    $MailPassword = ConvertTo-PlainText $secureMailPassword
+}
+
+if ($MailUsername -and $MailPassword) {
+    if (-not $MailFrom) {
+        $MailFrom = $MailUsername
+    }
+
+    $env:MAIL_HOST = "smtp.gmail.com"
+    $env:MAIL_PORT = "587"
+    $env:MAIL_SMTP_AUTH = "true"
+    $env:MAIL_SMTP_STARTTLS = "true"
+    $env:MAIL_USERNAME = $MailUsername
+    $env:MAIL_PASSWORD = $MailPassword
+    $env:MAIL_FROM = $MailFrom
+
+    Ok "SMTP Gmail configuré pour l'envoi de réponses clients"
+}
+else {
+    Warn "SMTP non configuré: la réponse email admin->client sera indisponible"
+}
+
 if (-not $env:JWT_SECRET) {
     $env:JWT_SECRET = "replace_with_a_very_long_random_secret_key_at_least_32_chars"
 }
