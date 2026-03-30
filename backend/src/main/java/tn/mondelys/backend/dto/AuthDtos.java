@@ -53,4 +53,28 @@ public class AuthDtos {
             return role;
         }
     }
+
+    public static class SessionResponse {
+        private String email;
+        private String fullName;
+        private String role;
+
+        public SessionResponse(String email, String fullName, String role) {
+            this.email = email;
+            this.fullName = fullName;
+            this.role = role;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public String getRole() {
+            return role;
+        }
+    }
 }

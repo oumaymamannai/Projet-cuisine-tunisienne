@@ -3,6 +3,7 @@ package tn.mondelys.backend.dto;
 import tn.mondelys.backend.model.Reservation;
 import tn.mondelys.backend.model.ReservationStatus;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -34,6 +35,7 @@ public class ReservationDtos {
         private String phone;
 
         @NotNull
+        @FutureOrPresent
         private LocalDate reservationDate;
 
         @NotNull

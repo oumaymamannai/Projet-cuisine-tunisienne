@@ -92,8 +92,12 @@ public class ReservationService {
     }
 
     private String generateReference() {
-        int random = ThreadLocalRandom.current().nextInt(100000, 999999);
-        return "MDY-" + random;
+        String candidate;
+        do {
+            int random = ThreadLocalRandom.current().nextInt(100000, 999999);
+            candidate = "MDY-" + random;
+        } while (reservationRepository.existsByReferenceCode(candidate));
+        return candidate;
     }
 
     private String blankToNull(String value) {

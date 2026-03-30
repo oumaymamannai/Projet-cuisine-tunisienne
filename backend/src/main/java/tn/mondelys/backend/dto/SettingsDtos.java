@@ -1,5 +1,6 @@
 package tn.mondelys.backend.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import tn.mondelys.backend.model.AppSettings;
@@ -16,6 +17,7 @@ public class SettingsDtos {
         private String publicPhone;
 
         @NotBlank
+        @Email
         @Size(max = 180)
         private String publicEmail;
 

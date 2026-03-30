@@ -8,8 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tn.mondelys.backend.model.Admin;
+import tn.mondelys.backend.repository.AdminRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,9 +21,11 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final AdminRepository adminRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(JwtService jwtService, AdminRepository adminRepository) {
         this.jwtService = jwtService;
+        this.adminRepository = adminRepository;
     }
 
     @Override
@@ -43,24 +48,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
         if (!jwtService.isTokenValid(token)) {
+            SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;
         }
 
         String email = jwtService.extractEmail(token);
-        String role = String.valueOf(jwtService.extractAllClaims(token).get("role"));
+        Admin admin = adminRepository.findByEmailIgnoreCase(email).orElse(null);
+
+        if (admin == null) {
+            SecurityContextHolder.clearContext();
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                email,
+                admin.getEmail(),
                 null,
-                List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                List.of(new SimpleGrantedAuthority("ROLE_" + admin.getRole()))
         );
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);

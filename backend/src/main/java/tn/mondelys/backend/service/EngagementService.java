@@ -1,9 +1,6 @@
 package tn.mondelys.backend.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import tn.mondelys.backend.dto.EngagementDtos;
 import tn.mondelys.backend.model.ClientReview;
@@ -23,19 +20,13 @@ public class EngagementService {
     private final ClientReviewRepository clientReviewRepository;
     private final ContactMessageRepository contactMessageRepository;
     private final ReservationRepository reservationRepository;
-    private final JavaMailSender mailSender;
-
-    @Value("${app.mail.from:no-reply@mondelys.tn}")
-    private String fromEmail;
 
     public EngagementService(ClientReviewRepository clientReviewRepository,
                              ContactMessageRepository contactMessageRepository,
-                             ReservationRepository reservationRepository,
-                             JavaMailSender mailSender) {
+                             ReservationRepository reservationRepository) {
         this.clientReviewRepository = clientReviewRepository;
         this.contactMessageRepository = contactMessageRepository;
         this.reservationRepository = reservationRepository;
-        this.mailSender = mailSender;
     }
 
     public EngagementDtos.ReviewView createReview(EngagementDtos.CreateReviewRequest request) {
@@ -109,12 +100,11 @@ public class EngagementService {
     public EngagementDtos.ContactMessageView respondToMessage(Long messageId, String adminEmail, EngagementDtos.ContactResponseRequest request) {
         ContactMessage message = contactMessageRepository.findById(messageId)
                 .orElseThrow(() -> new IllegalArgumentException("Message introuvable"));
-
-        sendEmailResponse(message, request.getResponse().trim());
+        String responseText = request.getResponse().trim();
 
         message.setReadByAdmin(true);
         message.setResponded(true);
-        message.setAdminResponse(request.getResponse().trim());
+        message.setAdminResponse(responseText);
         message.setRespondedBy(adminEmail);
         message.setRespondedAt(LocalDateTime.now());
 
@@ -134,19 +124,6 @@ public class EngagementService {
         );
 
         return new EngagementDtos.NotificationsResponse(total, newMessages, pendingReviews, pendingReservations, items);
-    }
-
-    private void sendEmailResponse(ContactMessage message, String responseText) {
-        try {
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setFrom(fromEmail);
-            mail.setTo(message.getEmail());
-            mail.setSubject("Réponse à votre message - Mondelys");
-            mail.setText("Bonjour " + message.getFirstName() + ",\n\n" + responseText + "\n\nCordialement,\nL'équipe Mondelys");
-            mailSender.send(mail);
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Impossible d'envoyer l'email. Vérifiez la configuration SMTP.");
-        }
     }
 
     private String blankToNull(String value) {

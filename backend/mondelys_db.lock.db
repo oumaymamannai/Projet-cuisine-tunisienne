@@ -1,0 +1,6 @@
+#FileLock
+#Mon Mar 30 02:01:03 CET 2026
+server=192.168.1.6\:34667
+hostName=archlinux
+method=file
+id=19d3c422edc07c4adf505856f1e6574497a7e99d93a

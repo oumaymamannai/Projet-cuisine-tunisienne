@@ -72,10 +72,10 @@
         </div>
         <select class="filter-select" id="filterSubject" onchange="filterContacts()">
           <option value="">Tous sujets</option>
-          <option value="Événement privé / Mariage">Événement privé</option>
-          <option value="Menu & Allergies">Menu &amp; Allergies</option>
-          <option value="Partenariat professionnel">Partenariat</option>
-          <option value="Iftar Ramadan">Iftar Ramadan</option>
+          <option value="Événement privé">Événement privé</option>
+          <option value="Allergies">Menu &amp; Allergies</option>
+          <option value="Partenariat">Partenariat</option>
+          <option value="Ramadan">Iftar Ramadan</option>
         </select>
         <select class="filter-select" id="filterMsgStatus" onchange="filterContacts()">
           <option value="">Tous</option>
@@ -129,7 +129,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn-sm outline" onclick="closeModal('modalContact')">Fermer</button>
-      <button class="btn-sm" onclick="sendContactResponse()"><i class="fas fa-paper-plane" style="margin-right:5px;"></i>Envoyer la réponse</button>
+      <button class="btn-sm" onclick="sendContactResponse()"><i class="fas fa-save" style="margin-right:5px;"></i>Enregistrer la réponse</button>
     </div>
   </div>
 </div>
@@ -177,7 +177,7 @@
     filteredContacts = contacts.filter(c => {
       const fullName = `${c.firstName} ${c.lastName}`.toLowerCase();
       const matchSearch  = !search  || fullName.includes(search) || c.email.toLowerCase().includes(search) || c.message.toLowerCase().includes(search);
-      const matchSubject = !subject || c.subject === subject;
+      const matchSubject = !subject || c.subject.toLowerCase().includes(subject.toLowerCase());
       const matchStatus  = !status  || (status === 'new' ? !c.readByAdmin : c.readByAdmin);
       return matchSearch && matchSubject && matchStatus;
     });
@@ -220,7 +220,7 @@
       });
 
       closeModal('modalContact');
-      showToast('Réponse envoyée à ' + c.email + ' !', true);
+      showToast('Réponse enregistrée pour ' + c.email + ' !', true);
       await loadContacts();
     } catch (error) {
       showToast(error.message || 'Erreur serveur', false);

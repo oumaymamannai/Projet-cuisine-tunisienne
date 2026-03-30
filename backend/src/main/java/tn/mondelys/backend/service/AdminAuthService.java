@@ -7,6 +7,8 @@ import tn.mondelys.backend.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
+
 @Service
 public class AdminAuthService {
 
@@ -21,7 +23,9 @@ public class AdminAuthService {
     }
 
     public AuthDtos.LoginResponse login(AuthDtos.LoginRequest request) {
-        Admin admin = adminRepository.findByEmailIgnoreCase(request.getEmail())
+        String email = request.getEmail().trim().toLowerCase(Locale.ROOT);
+
+        Admin admin = adminRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new IllegalArgumentException("Email ou mot de passe invalide"));
 
         if (!passwordEncoder.matches(request.getPassword(), admin.getPasswordHash())) {
@@ -30,5 +34,12 @@ public class AdminAuthService {
 
         String token = jwtService.generateToken(admin.getId(), admin.getEmail(), admin.getRole());
         return new AuthDtos.LoginResponse(token, admin.getFullName(), admin.getRole());
+    }
+
+    public AuthDtos.SessionResponse getSession(String email) {
+        Admin admin = adminRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new IllegalArgumentException("Session administrateur introuvable"));
+
+        return new AuthDtos.SessionResponse(admin.getEmail(), admin.getFullName(), admin.getRole());
     }
 }

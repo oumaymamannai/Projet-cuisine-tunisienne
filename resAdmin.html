@@ -139,7 +139,7 @@
       <div class="modal-row"><span class="modal-label">Demandes spéciales</span><span class="modal-val" id="mRequests" style="font-style:italic;color:var(--text-light);">—</span></div>
       <div class="modal-row" style="margin-top:1rem;">
         <span class="modal-label">Note interne</span>
-        <textarea class="modal-textarea" placeholder="Ajouter une note interne..."></textarea>
+        <textarea class="modal-textarea" id="mAdminNote" placeholder="Ajouter une note interne..."></textarea>
       </div>
     </div>
     <div class="modal-footer">
@@ -174,7 +174,7 @@
   function renderReservations(data) {
     document.getElementById('resBody').innerHTML = data.map(r => `
       <tr>
-        <td><span style="font-family:var(--ff-ui);font-size:0.78rem;font-weight:600;color:var(--terracotta);">${r.id}</span></td>
+        <td><span style="font-family:var(--ff-ui);font-size:0.78rem;font-weight:600;color:var(--terracotta);">${r.referenceCode}</span></td>
         <td>
           <div style="font-weight:600;font-size:0.88rem;">${r.firstName} ${r.lastName}</div>
           <div style="font-size:0.72rem;color:var(--text-light);">${r.email}</div>
@@ -268,14 +268,15 @@
     document.getElementById('mOccasion').textContent = r.occasion  || '—';
     document.getElementById('mPreorder').textContent = r.preorder  || 'Choix sur place';
     document.getElementById('mRequests').textContent = r.specialRequests  || '—';
+    document.getElementById('mAdminNote').value      = r.adminNote || '';
     document.getElementById('modalRes').dataset.resId = id;
     openModal('modalRes');
   }
 
-  async function updateReservationStatus(id, status, message) {
+  async function updateReservationStatus(id, status, message, adminNote = '') {
     await adminFetch(`/api/admin/reservations/${id}/status`, {
       method: 'PATCH',
-      body: JSON.stringify({ status })
+      body: JSON.stringify({ status, adminNote })
     });
     await fetchReservations();
     showToast(message, status === 'CONFIRMED');
@@ -283,8 +284,9 @@
 
   async function confirmRes() {
     const id = document.getElementById('modalRes').dataset.resId;
+    const adminNote = document.getElementById('mAdminNote').value.trim();
     try {
-      await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée !');
+      await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée !', adminNote);
       closeModal('modalRes');
     } catch (error) {
       showToast(error.message, false);
@@ -293,8 +295,9 @@
 
   async function cancelRes() {
     const id = document.getElementById('modalRes').dataset.resId;
+    const adminNote = document.getElementById('mAdminNote').value.trim();
     try {
-      await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée.');
+      await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée.', adminNote);
       closeModal('modalRes');
     } catch (error) {
       showToast(error.message, false);

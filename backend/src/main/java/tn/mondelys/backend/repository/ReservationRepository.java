@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+    boolean existsByReferenceCode(String referenceCode);
+
     long countByReservationDate(LocalDate date);
 
     long countByStatus(ReservationStatus status);

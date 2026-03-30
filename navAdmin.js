@@ -22,6 +22,29 @@
   });
 })();
 
+(function applyAdminIdentity() {
+  const storedName = localStorage.getItem("adminName");
+  const storedRole = localStorage.getItem("adminRole");
+
+  if (storedName) {
+    document.querySelectorAll(".sidebar-user strong").forEach((node) => {
+      node.textContent = storedName;
+    });
+  }
+
+  if (storedRole) {
+    const roleLabel = storedRole === "ADMIN" ? "Administrateur" : storedRole;
+
+    document.querySelectorAll(".sidebar-user span").forEach((node) => {
+      node.textContent = roleLabel;
+    });
+
+    document.querySelectorAll(".sidebar-role").forEach((node) => {
+      node.textContent = roleLabel;
+    });
+  }
+})();
+
 // Mobile hamburger
 const hamburgerAdmin = document.getElementById("hamburgerAdmin");
 if (hamburgerAdmin) {
@@ -79,12 +102,19 @@ document.querySelectorAll(".modal-overlay").forEach((m) => {
 document.querySelectorAll(".logout-btn").forEach((button) => {
   button.addEventListener("click", async () => {
     try {
-      await fetch("/api/admin/auth/logout", { method: "POST" });
+      await fetch("/api/admin/auth/logout", {
+        method: "POST",
+        credentials: "same-origin",
+      });
     } catch (_) {
     }
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminName");
-    localStorage.removeItem("adminRole");
-    window.location.href = "/admin";
+    if (typeof window.clearAdminSessionState === "function") {
+      window.clearAdminSessionState();
+    } else {
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminName");
+      localStorage.removeItem("adminRole");
+    }
+    window.location.replace("/admin");
   });
 });
