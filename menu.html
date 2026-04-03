@@ -13,6 +13,198 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      /* =============================
+         SMOOTH TRANSITIONS & EFFECTS
+         ============================= */
+
+      body {
+        animation: pageFadeIn 0.6s ease both;
+      }
+      @keyframes pageFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+
+      #navbar {
+        transition: background 0.4s ease, box-shadow 0.4s ease, padding 0.3s ease;
+      }
+      #navbar.scrolled {
+        box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+      }
+
+      .nav-links a {
+        position: relative;
+        transition: color 0.25s ease;
+      }
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        left: 0; bottom: -3px;
+        width: 0; height: 1.5px;
+        background: currentColor;
+        transition: width 0.3s cubic-bezier(.4,0,.2,1);
+      }
+      .nav-links a:hover::after,
+      .nav-links a.active::after { width: 100%; }
+
+      .nav-cta {
+        transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+      }
+      .nav-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+      }
+
+      .page-header-content {
+        animation: headerReveal 0.9s cubic-bezier(.22,1,.36,1) 0.2s both;
+      }
+      @keyframes headerReveal {
+        from { opacity: 0; transform: translateY(32px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .tab-btn {
+        position: relative;
+        transition: color 0.25s ease, background 0.25s ease, transform 0.18s ease;
+        overflow: hidden;
+      }
+      .tab-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        border-radius: inherit;
+      }
+      .tab-btn:hover::before { opacity: 0.07; }
+      .tab-btn:hover { transform: translateY(-1px); }
+      .tab-btn:active { transform: translateY(0); }
+
+      .menu-section {
+        display: none;
+        animation: sectionIn 0.45s cubic-bezier(.22,1,.36,1) both;
+      }
+      .menu-section.active { display: block; }
+      @keyframes sectionIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .menu-section.active .menu-intro > * {
+        animation: fadeSlideUp 0.5s cubic-bezier(.22,1,.36,1) both;
+      }
+      .menu-section.active .menu-intro > *:nth-child(1) { animation-delay: 0.05s; }
+      .menu-section.active .menu-intro > *:nth-child(2) { animation-delay: 0.12s; }
+      .menu-section.active .menu-intro > *:nth-child(3) { animation-delay: 0.19s; }
+      @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .menu-section.active .menu-item { animation: cardReveal 0.5s cubic-bezier(.22,1,.36,1) both; }
+      .menu-section.active .menu-item:nth-child(1) { animation-delay: 0.10s; }
+      .menu-section.active .menu-item:nth-child(2) { animation-delay: 0.17s; }
+      .menu-section.active .menu-item:nth-child(3) { animation-delay: 0.24s; }
+      .menu-section.active .menu-item:nth-child(4) { animation-delay: 0.31s; }
+      .menu-section.active .menu-item:nth-child(5) { animation-delay: 0.38s; }
+      .menu-section.active .menu-item:nth-child(6) { animation-delay: 0.45s; }
+      .menu-section.active .menu-item:nth-child(7) { animation-delay: 0.52s; }
+      .menu-section.active .menu-item:nth-child(8) { animation-delay: 0.58s; }
+      .menu-section.active .menu-item:nth-child(9) { animation-delay: 0.64s; }
+      @keyframes cardReveal {
+        from { opacity: 0; transform: translateY(24px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .menu-item {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s cubic-bezier(.22,1,.36,1),
+                    box-shadow 0.3s cubic-bezier(.22,1,.36,1);
+        will-change: transform;
+      }
+      .menu-item:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+      }
+      .menu-item img {
+        transition: transform 0.55s cubic-bezier(.22,1,.36,1), filter 0.35s ease;
+        will-change: transform;
+      }
+      .menu-item:hover img {
+        transform: scale(1.07);
+        filter: brightness(1.05) saturate(1.08);
+      }
+
+      .menu-item-price { transition: letter-spacing 0.2s ease; }
+      .menu-item:hover .menu-item-price { letter-spacing: 0.03em; }
+
+      .tag-badge {
+        display: inline-block;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .menu-item:hover .tag-badge {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+      }
+
+      .menu-item::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -75%;
+        width: 50%; height: 100%;
+        background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+        transform: skewX(-20deg);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .menu-item:hover::after {
+        opacity: 1;
+        left: 125%;
+        transition: left 0.65s ease, opacity 0.1s ease;
+      }
+
+      .menu-tabs { position: relative; }
+      .tab-marker {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        background: currentColor;
+        border-radius: 2px;
+        transition: left 0.35s cubic-bezier(.4,0,.2,1), width 0.35s cubic-bezier(.4,0,.2,1);
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      .footer-links a {
+        transition: opacity 0.22s ease, transform 0.22s ease;
+        display: inline-block;
+      }
+      .footer-links a:hover { opacity: 0.75; transform: translateX(3px); }
+
+      .socials a {
+        transition: transform 0.22s ease, color 0.22s ease;
+        display: inline-block;
+      }
+      .socials a:hover { transform: translateY(-3px) scale(1.15); }
+
+      .menu-item.scroll-hidden {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.55s cubic-bezier(.22,1,.36,1),
+                    transform 0.55s cubic-bezier(.22,1,.36,1);
+      }
+      .menu-item.scroll-visible { opacity: 1; transform: translateY(0); }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar scrolled" id="navbar">
@@ -68,6 +260,7 @@
             <button class="tab-btn" data-tab="italie">🇮🇹 Italie</button>
             <button class="tab-btn" data-tab="Arabique">OR Orientale</button>
             <button class="tab-btn" data-tab="desserts">Desserts</button>
+            <span class="tab-marker" id="tabMarker"></span>
           </div>
         </div>
 
@@ -79,7 +272,7 @@
             <p class="section-label">🇯🇵 Cuisine Japonaise</p>
             <h2 class="section-title">L'Art de la <em>Précision</em></h2>
             <p>
-              Saveurs du Japon à l’état pur — sushi exquis, wagyu fondant et
+              Saveurs du Japon à l'état pur — sushi exquis, wagyu fondant et
               techniques ancestrales perfectionnées.
             </p>
           </div>
@@ -115,7 +308,7 @@
                   <span class="menu-item-price">96 TND(16 piéces)</span>
                 </div>
                 <p class="menu-item-desc">
-                  Délicat sushi au saumon cru, accompagné d’avocat fondant et de
+                  Délicat sushi au saumon cru, accompagné d'avocat fondant et de
                   graines de sésame, sur un riz vinaigré parfaitement
                   assaisonné. accompagné d'une sauce soja subtilement salée et
                   sucrée. Option : Par Piéces .
@@ -139,7 +332,7 @@
                 </div>
                 <p class="menu-item-desc">
                   Un sushi crunchy irrésistible : saumon cuit tendre à cœur,
-                  texture croustillante à l’extérieur, avocat crémeux et sauce
+                  texture croustillante à l'extérieur, avocat crémeux et sauce
                   soja douce et équilibrée. Option : Par Piéces .
                 </p>
                 <p class="menu-item-origin">
@@ -186,7 +379,7 @@
                   <span class="menu-item-price">35 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  Poulet pané croustillant, nappé d’une sauce curry relevée et
+                  Poulet pané croustillant, nappé d'une sauce curry relevée et
                   épicée, servi avec du riz moelleux pour une explosion de
                   saveurs.
                 </p>
@@ -208,8 +401,8 @@
                 </div>
                 <p class="menu-item-desc">
                   Boulettes de pâte moelleuse garnies de morceaux de poulpe,
-                  cuites à la perfection et nappées d’une sauce takoyaki
-                  savoureuse, parsemées de flocons de bonite et d’algues.
+                  cuites à la perfection et nappées d'une sauce takoyaki
+                  savoureuse, parsemées de flocons de bonite et d'algues.
                 </p>
                 <p class="menu-item-origin">
                   <i class="fas fa-map-marker-alt"></i> Japon
@@ -229,7 +422,7 @@
             <p class="section-label">🇲🇽 Cuisine Mexicaine</p>
             <h2 class="section-title">Sabores <em>Mexicanos</em></h2>
             <p>
-              Voyage au cœur de l’Amérique du Sud – Savourez des ceviches frais, des moles ancestraux et des ingrédients rares de Oaxaca et Puebla, pour un mélange vibrant de couleurs et de saveurs.
+              Voyage au cœur de l'Amérique du Sud – Savourez des ceviches frais, des moles ancestraux et des ingrédients rares de Oaxaca et Puebla, pour un mélange vibrant de couleurs et de saveurs.
             </p>
           </div>
           <div class="menu-grid">
@@ -288,7 +481,7 @@
                   <span class="menu-item-price">26 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  Purée d’avocat crémeuse avec tomates, oignons, coriandre et citron vert.
+                  Purée d'avocat crémeuse avec tomates, oignons, coriandre et citron vert.
                 </p>
                 <p class="menu-item-origin">
                   <i class="fas fa-map-marker-alt"></i> Mexique
@@ -310,7 +503,7 @@
                   <span class="menu-item-price">52 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  Poulet nappé d’une sauce riche au chocolat, piments et épices mexicaines.
+                  Poulet nappé d'une sauce riche au chocolat, piments et épices mexicaines.
                 </p>
                 <p class="menu-item-origin">
                   <i class="fas fa-map-marker-alt"></i> originaire de Puebla, Mexique
@@ -332,7 +525,7 @@
             <p class="section-label">🇮🇹 Cuisine Italienne</p>
             <h2 class="section-title"><em>Dolce Vita</em> Italiana</h2>
             <p>
-              Un voyage au cœur de l’Italie, entre pâtes artisanales, pizzas
+              Un voyage au cœur de l'Italie, entre pâtes artisanales, pizzas
               croustillantes et parfums méditerranéens inoubliables.
             </p>
           </div>
@@ -345,7 +538,7 @@
                   <span class="menu-item-price">50 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  L’authentique Carbonara italienne : spaghetti parfaitement
+                  L'authentique Carbonara italienne : spaghetti parfaitement
                   cuits, sauce onctueuse aux œufs et Pecorino, morceaux de
                   pancetta dorée et touche de poivre noir.
                 </p>
@@ -390,7 +583,7 @@
                   <span class="menu-item-price">40 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  Ravioli fondants, généreusement garnis et enveloppés d’une
+                  Ravioli fondants, généreusement garnis et enveloppés d'une
                   sauce blanche crémeuse, pour une explosion de saveurs
                   italiennes à chaque bouchée.
                 </p>
@@ -482,7 +675,7 @@
                   <span class="menu-item-price">42 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  Rigatoni al dente, enrobés d’une sauce à la viande mijotée
+                  Rigatoni al dente, enrobés d'une sauce à la viande mijotée
                   lentement aux tomates et herbes italiennes, pour un goût
                   authentique et réconfortant.
                 </p>
@@ -504,7 +697,7 @@
                 </div>
                 <p class="menu-item-desc">
                   Bruschetta croquante garnie de tomates fraîches, basilic et
-                  fromage fondant, assaisonnée d’un filet d’huile d’olive extra
+                  fromage fondant, assaisonnée d'un filet d'huile d'olive extra
                   vierge
                 </p>
                 <p class="menu-item-origin">
@@ -525,7 +718,7 @@
                 </div>
                 <p class="menu-item-desc">
                   Tagliatelle à la Sauce Blanche – Des tagliatelles savoureuses
-                  enrobées d’une sauce blanche onctueuse et subtilement
+                  enrobées d'une sauce blanche onctueuse et subtilement
                   assaisonnée, pour un plat réconfortant et plein de goût.
                 </p>
                 <p class="menu-item-origin">
@@ -546,7 +739,7 @@
         <p class="section-label">OR Cuisine Orientale</p>
         <h2 class="section-title"><em>Saveurs D'</em> Orient</h2>
         <p>
-          Voyage gourmand au cœur de l’Orient — Des saveurs authentiques et épicées,
+          Voyage gourmand au cœur de l'Orient — Des saveurs authentiques et épicées,
            un mélange de traditions et de couleurs qui émerveille les sens.  
         </p>
       </div>
@@ -558,7 +751,7 @@
             <span class="menu-item-price"> 16 TND</span>
           </div>
           <p class="menu-item-desc">
-            Hummus – Une purée onctueuse de pois chiches, délicatement assaisonnée de tahini, citron et huile d’olive, pour un goût doux, crémeux et authentiquement oriental.  
+            Hummus – Une purée onctueuse de pois chiches, délicatement assaisonnée de tahini, citron et huile d'olive, pour un goût doux, crémeux et authentiquement oriental.  
 
           </p>
           <p class="menu-item-origin">
@@ -602,7 +795,7 @@
               <span class="menu-item-price"> 18 TND</span>
             </div>
             <p class="menu-item-desc">
-              Yabraq – Des roulés savoureux de feuilles de vigne garnies de riz et d’épices, pour un plat aromatique et réconfortant.  
+              Yabraq – Des roulés savoureux de feuilles de vigne garnies de riz et d'épices, pour un plat aromatique et réconfortant.  
             </p>
             <p class="menu-item-origin">
               <i class="fas fa-map-marker-alt"></i> Syrie , Lebanon
@@ -744,7 +937,7 @@
                   <span class="menu-item-price">Large 22 TND</span>
                 </div>
                 <p class="menu-item-desc">
-                  Küneffah – Douceur du Moyen-Orient : fromage fondant enveloppé de fils de pâte croustillants, nappé d’un sirop délicatement parfumé.  
+                  Küneffah – Douceur du Moyen-Orient : fromage fondant enveloppé de fils de pâte croustillants, nappé d'un sirop délicatement parfumé.  
                 </p>
                 <p class="menu-item-origin">
                   <i class="fas fa-map-marker-alt"></i> 🇮🇹 Syrie
@@ -873,5 +1066,71 @@
 
     <script src="main.js"></script>
     <script src="publicSettings.js"></script>
+    <script>
+      // --- Sliding tab marker ---
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const sections = document.querySelectorAll('.menu-section');
+      const marker = document.getElementById('tabMarker');
+
+      function moveMarker(btn) {
+        if (!marker || !btn) return;
+        const rect = btn.getBoundingClientRect();
+        const parentRect = btn.closest('.menu-tabs').getBoundingClientRect();
+        marker.style.left  = (rect.left - parentRect.left) + 'px';
+        marker.style.width = rect.width + 'px';
+      }
+
+      requestAnimationFrame(() => {
+        const active = document.querySelector('.tab-btn.active');
+        if (active) {
+          marker.style.transition = 'none';
+          moveMarker(active);
+          requestAnimationFrame(() => { marker.style.transition = ''; });
+        }
+      });
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          moveMarker(btn);
+          sections.forEach(s => {
+            if (s.id === target) {
+              s.classList.add('active');
+              s.style.animation = 'none';
+              s.offsetHeight;
+              s.style.animation = '';
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      // --- Scroll reveal ---
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('scroll-hidden');
+            entry.target.classList.add('scroll-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.menu-section:not(.active) .menu-item').forEach(item => {
+        item.classList.add('scroll-hidden');
+        observer.observe(item);
+      });
+
+      // --- Header parallax ---
+      const headerBg = document.querySelector('.page-header-bg');
+      if (headerBg) {
+        window.addEventListener('scroll', () => {
+          headerBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+        }, { passive: true });
+      }
+    </script>
   </body>
 </html>

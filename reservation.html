@@ -7,8 +7,309 @@
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    /* =============================
+       SMOOTH TRANSITIONS & EFFECTS
+       ============================= */
+
+    #navbar {
+      transition: background 0.4s ease, box-shadow 0.4s ease, padding 0.3s ease;
+    }
+    #navbar.scrolled {
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    }
+
+    .nav-links a {
+      position: relative;
+      transition: color 0.25s ease;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -3px;
+      width: 0; height: 1.5px;
+      background: currentColor;
+      transition: width 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+
+    .nav-cta {
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+    }
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+    }
+
+    .page-header-content {
+      animation: headerReveal 0.9s cubic-bezier(.22,1,.36,1) 0.2s both;
+    }
+    @keyframes headerReveal {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ─── RES-DETAIL HOVER CARD ─── */
+    .res-detail {
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.35s ease,
+                  background 0.3s ease;
+      cursor: default;
+      overflow: hidden;
+    }
+    .res-detail::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 3px;
+      height: 0;
+      background: var(--gold, #c9a84c);
+      transition: height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .res-detail:hover {
+      transform: translateX(6px);
+      box-shadow: -6px 0 24px rgba(201,168,76,0.12);
+      background: rgba(201,168,76,0.04);
+    }
+    .res-detail:hover::before {
+      height: 100%;
+    }
+    .res-detail i {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+    }
+    .res-detail:hover i {
+      transform: scale(1.25) rotate(-5deg);
+      color: var(--gold, #c9a84c) !important;
+    }
+
+    /* ─── FORM FIELD FOCUS EFFECTS ─── */
+    .form-group {
+      position: relative;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      transition: border-color 0.3s ease,
+                  box-shadow 0.3s ease,
+                  transform 0.25s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.15), 0 0 0 2px rgba(201,168,76,0.2);
+      outline: none;
+    }
+
+    /* Label float animation */
+    .form-group label {
+      transition: color 0.25s ease;
+    }
+    .form-group:focus-within label {
+      color: var(--gold, #c9a84c);
+    }
+
+    /* ─── STAGGER REVEAL FOR FORM ROWS ─── */
+    .form-row:nth-child(1) { transition-delay: 0.05s; }
+    .form-row:nth-child(2) { transition-delay: 0.12s; }
+    .form-row:nth-child(3) { transition-delay: 0.19s; }
+    .form-row:nth-child(4) { transition-delay: 0.26s; }
+
+    /* ─── SUBMIT BUTTON ANIMATION ─── */
+    .btn-gold {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease,
+                  letter-spacing 0.3s ease;
+    }
+    .btn-gold::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.12);
+      transform: translateX(-101%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .btn-gold:hover::after {
+      transform: translateX(0);
+    }
+    .btn-gold:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 32px rgba(201,168,76,0.35);
+      letter-spacing: 1.5px;
+    }
+    .btn-gold:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* ─── RESERVATION FORM PANEL ─── */
+    .reservation-form {
+      transition: box-shadow 0.4s ease;
+    }
+    .reservation-form:hover {
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(201,168,76,0.1);
+    }
+
+    /* ─── SUCCESS MESSAGE POP ─── */
+    .success-msg {
+      animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes successPop {
+      0%   { opacity: 0; transform: scale(0.85) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ─── FLOATING GOLD PARTICLES ─── */
+    .page-header {
+      position: relative;
+    }
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.6);
+      pointer-events: none;
+      animation: floatParticle var(--dur, 6s) var(--delay, 0s) ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes floatParticle {
+      0%   { opacity: 0; transform: translate(0, 0) scale(0); }
+      10%  { opacity: 0.8; transform: translate(0, 0) scale(1); }
+      90%  { opacity: 0.4; }
+      100% { opacity: 0; transform: translate(var(--tx, 30px), -120px) scale(0.3); }
+    }
+
+    /* ─── NAVBAR LINK UNDERLINE SLIDE ─── */
+    .nav-links a {
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold, #c9a84c);
+      transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* ─── SECTION LABEL SHIMMER ─── */
+    .section-label {
+      position: relative;
+    }
+    .section-label::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold, #c9a84c), transparent);
+      transform: translateY(-50%);
+      transition: width 1.2s ease 0.5s;
+    }
+    .section-label.visible::before {
+      width: 100%;
+    }
+
+    /* ─── PAGE EXIT TRANSITION ─── */
+    body.page-exit {
+      animation: pageExit 0.5s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    }
+    @keyframes pageExit {
+      0%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-20px); }
+    }
+
+    /* ─── SCROLL PROGRESS BAR ─── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold, #c9a84c), #f0d080);
+      width: 0%;
+      z-index: 10000;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 8px rgba(201,168,76,0.5);
+    }
+
+    /* ─── CHECKBOX CUSTOM STYLE ─── */
+    #terms {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px !important;
+      height: 18px;
+      border: 1.5px solid rgba(201,168,76,0.4);
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.25s ease, background 0.25s ease;
+      flex-shrink: 0;
+    }
+    #terms:checked {
+      background: var(--gold, #c9a84c);
+      border-color: var(--gold, #c9a84c);
+    }
+    #terms:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      animation: checkPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes checkPop {
+      0%   { transform: translate(-50%, -50%) scale(0); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+  </style>
 </head>
 <body>
+
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav class="navbar scrolled" id="navbar">
   <div class="nav-logo">
@@ -28,7 +329,7 @@
   <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </nav>
 
-<div class="page-header">
+<div class="page-header" id="pageHeader">
   <div class="page-header-bg" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80');"></div>
   <div class="page-header-overlay"></div>
   <div class="page-header-content">
@@ -41,32 +342,33 @@
 <section class="reservation-section">
   <div class="container">
     <div class="reservation-grid">
-      <div class="res-info">
+
+      <div class="res-info reveal-left">
         <p class="section-label">Informations Pratiques</p>
         <h2>Bienvenue chez <em id="reservationRestaurantName" style="color:var(--gold)">Mondélys</em></h2>
         <p>Réservez votre table en ligne. Nous confirmons toute réservation par SMS dans un délai de 2h. Pour le menu dégustation 7 plats, nous recommandons de réserver 48h à l'avance.</p>
         <div class="res-details">
-          <div class="res-detail">
+          <div class="res-detail reveal" style="transition-delay:0.1s">
             <i class="fas fa-clock"></i>
             <div><strong>Horaires</strong>
             <span id="reservationHoursValue">Mar–Ven : 12h–15h / 19h–23h<br/>Sam–Dim : 12h–16h / 19h–23h30</span></div>
           </div>
-          <div class="res-detail">
+          <div class="res-detail reveal" style="transition-delay:0.2s">
             <i class="fas fa-globe"></i>
             <div><strong>Menu Dégustation</strong>
             <span>Le menu 7 plats (tour du monde) nécessite une réservation 48h à l'avance pour permettre la préparation de tous les chefs.</span></div>
           </div>
-          <div class="res-detail">
+          <div class="res-detail reveal" style="transition-delay:0.3s">
             <i class="fas fa-users"></i>
             <div><strong>Groupes</strong>
             <span>Pour les groupes de 8+ personnes, contactez-nous directement au +216 71 234 567 pour un événement privé.</span></div>
           </div>
-          <div class="res-detail">
+          <div class="res-detail reveal" style="transition-delay:0.4s">
             <i class="fas fa-leaf"></i>
             <div><strong>Régimes Alimentaires</strong>
             <span>Options végétariennes, végétaliennes et sans gluten disponibles dans toutes les cuisines. Prévenez-nous lors de la réservation.</span></div>
           </div>
-          <div class="res-detail">
+          <div class="res-detail reveal" style="transition-delay:0.5s">
             <i class="fas fa-wine-glass"></i>
             <div><strong>Cave Internationale</strong>
             <span>Plus de 200 références — vins français, sake japonais, mezcals mexicains et bières artisanales du monde entier.</span></div>
@@ -74,10 +376,10 @@
         </div>
       </div>
 
-      <div class="reservation-form">
+      <div class="reservation-form reveal-right">
         <h3>✦ Nouvelle Réservation</h3>
         <form id="resForm" novalidate>
-          <div class="form-row">
+          <div class="form-row reveal" style="transition-delay:0.1s">
             <div class="form-group">
               <label for="firstName">Prénom <span style="color:var(--gold)">*</span></label>
               <input type="text" id="firstName" placeholder="Alessandro" required/>
@@ -87,7 +389,7 @@
               <input type="text" id="lastName" placeholder="Ferrara" required/>
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row reveal" style="transition-delay:0.18s">
             <div class="form-group">
               <label for="email">Email <span style="color:var(--gold)">*</span></label>
               <input type="email" id="email" placeholder="votre@email.com" required/>
@@ -97,7 +399,7 @@
               <input type="tel" id="phone" placeholder="+216 71 000 000" required/>
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row reveal" style="transition-delay:0.26s">
             <div class="form-group">
               <label for="date">Date <span style="color:var(--gold)">*</span></label>
               <input type="date" id="date" required/>
@@ -120,7 +422,7 @@
               </select>
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row reveal" style="transition-delay:0.34s">
             <div class="form-group">
               <label for="guests">Couverts <span style="color:var(--gold)">*</span></label>
               <select id="guests" required>
@@ -145,7 +447,7 @@
               </select>
             </div>
           </div>
-          <div class="form-group" style="margin-bottom: 1.5rem;">
+          <div class="form-group reveal" style="margin-bottom: 1.5rem; transition-delay:0.4s">
             <label for="preorder">Pré-commande (recommandé pour le menu dégustation)</label>
             <select id="preorder">
               <option value="">Je choisirai sur place</option>
@@ -157,17 +459,17 @@
               <option>Osso Buco Milanaise 🇮🇹</option>
             </select>
           </div>
-          <div class="form-group" style="margin-bottom: 1.5rem;">
+          <div class="form-group reveal" style="margin-bottom: 1.5rem; transition-delay:0.46s">
             <label for="requests">Demandes Particulières</label>
             <textarea id="requests" placeholder="Allergies, régime alimentaire, occasion spéciale, chaise haute, préférences de table (terrasse, fenêtre, salon privé)..."></textarea>
           </div>
-          <div class="form-group" style="flex-direction: row; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.5rem;">
-            <input type="checkbox" id="terms" style="width: auto; margin-top: 4px; accent-color: var(--gold); -webkit-appearance: checkbox; appearance: checkbox;" required/>
+          <div class="form-group reveal" style="flex-direction: row; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.5rem; transition-delay:0.52s">
+            <input type="checkbox" id="terms" style="width: auto; margin-top: 4px;" required/>
             <label for="terms" style="text-transform: none; letter-spacing: 0; font-size: 0.9rem; font-family: var(--ff-body); cursor: pointer;">
               J'accepte les conditions de réservation et la politique d'annulation (24h avant).
             </label>
           </div>
-          <div class="form-submit">
+          <div class="form-submit reveal" style="transition-delay:0.58s">
             <button type="submit" class="btn btn-gold">
               <i class="fas fa-check" style="margin-right: 8px;"></i>Confirmer ma Réservation
             </button>
@@ -181,6 +483,7 @@
         </div>
         <p class="form-notice">Confirmation SMS sous 2h · Annulation gratuite jusqu'à 24h avant</p>
       </div>
+
     </div>
   </div>
 </section>
@@ -232,6 +535,67 @@
 <script src="main.js"></script>
 <script src="publicSettings.js"></script>
 <script>
+  /* ─── PAGE LOAD ─── */
+  window.addEventListener('load', () => {
+    const header = document.getElementById('pageHeader');
+    header.classList.add('loaded');
+    spawnParticles();
+  });
+
+  /* ─── PARTICLES ─── */
+  function spawnParticles() {
+    const header = document.getElementById('pageHeader');
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `
+        left: ${Math.random() * 100}%;
+        bottom: ${Math.random() * 40}%;
+        --dur: ${4 + Math.random() * 5}s;
+        --delay: ${Math.random() * 6}s;
+        --tx: ${(Math.random() - 0.5) * 80}px;
+        width: ${2 + Math.random() * 4}px;
+        height: ${2 + Math.random() * 4}px;
+        opacity: ${0.3 + Math.random() * 0.5};
+      `;
+      header.appendChild(p);
+    }
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  /* ─── SCROLL PROGRESS BAR ─── */
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = (scrolled / maxScroll) * 100;
+    document.getElementById('scrollProgress').style.width = pct + '%';
+  }, { passive: true });
+
+  /* ─── PAGE EXIT TRANSITIONS ─── */
+  document.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) return;
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.body.classList.add('page-exit');
+      setTimeout(() => { window.location = href; }, 420);
+    });
+  });
+
+  /* ─── FORM ─── */
   document.getElementById('date').min = new Date().toISOString().split('T')[0];
   document.getElementById('resForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -248,8 +612,9 @@
     if (Number.isNaN(guestsCount)) { alert('Nombre de couverts invalide.'); return; }
 
     const btn = e.target.querySelector('[type="submit"]');
-    const originalText = btn.textContent;
-    btn.textContent = 'Traitement...'; btn.disabled = true;
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px"></i>Traitement...';
+    btn.disabled = true;
 
     try {
       const payload = {
@@ -272,16 +637,14 @@
       });
 
       const body = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(body.message || 'Impossible d\'enregistrer la réservation.');
-      }
+      if (!response.ok) throw new Error(body.message || 'Impossible d\'enregistrer la réservation.');
 
       document.getElementById('resRef').textContent = body.referenceCode;
       document.getElementById('resForm').style.display = 'none';
       document.getElementById('successMsg').style.display = 'block';
     } catch (error) {
       alert(error.message || 'Une erreur est survenue.');
-      btn.textContent = originalText;
+      btn.innerHTML = originalHTML;
       btn.disabled = false;
     }
   });
