@@ -45,6 +45,162 @@
   }
 })();
 
+const ADMIN_SEEN_KEYS = {
+  reservations: "adminSeenReservationsAt",
+  reviews: "adminSeenReviewsAt",
+  messages: "adminSeenMessagesAt",
+};
+
+const ADMIN_PAGE_TO_SECTION = {
+  "resAdmin.html": "reservations",
+  "reviwAdmin.html": "reviews",
+  "contactAdmin.html": "messages",
+};
+
+let latestAdminNotificationState = {
+  reservations: 0,
+  reviews: 0,
+  messages: 0,
+  total: 0,
+};
+
+function currentAdminPage() {
+  return window.location.pathname.split("/").pop() || "index.html";
+}
+
+function getSeenAt(section) {
+  const key = ADMIN_SEEN_KEYS[section];
+  if (!key) return null;
+  const raw = localStorage.getItem(key);
+  if (!raw) return null;
+  const parsed = new Date(raw);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function setSeenAt(section, date = new Date()) {
+  const key = ADMIN_SEEN_KEYS[section];
+  if (!key) return;
+  localStorage.setItem(key, date.toISOString());
+}
+
+function markCurrentAdminSectionSeen() {
+  const section = ADMIN_PAGE_TO_SECTION[currentAdminPage()];
+  if (section) {
+    setSeenAt(section);
+  }
+}
+
+function countUnseen(items, seenAt) {
+  if (!Array.isArray(items) || items.length === 0) return 0;
+  if (!seenAt) return items.length;
+
+  const seenAtMs = seenAt.getTime();
+  return items.filter((item) => {
+    const createdAt = item && item.createdAt ? new Date(item.createdAt) : null;
+    if (!createdAt || Number.isNaN(createdAt.getTime())) {
+      return false;
+    }
+    return createdAt.getTime() > seenAtMs;
+  }).length;
+}
+
+function setSidebarBadge(page, count) {
+  const link = document.querySelector(`.sidebar-nav a[data-page="${page}"]`);
+  if (!link) return;
+
+  let badge = link.querySelector(".badge");
+  if (!badge) {
+    badge = document.createElement("span");
+    badge.className = "badge";
+    link.appendChild(badge);
+  }
+
+  if (count > 0) {
+    badge.textContent = String(count);
+    badge.style.display = "inline-block";
+  } else {
+    badge.textContent = "";
+    badge.style.display = "none";
+  }
+}
+
+function updateTopbarNotification(state) {
+  const notifButton = document.querySelector(".topbar-notif");
+  if (!notifButton) return;
+
+  const dot = notifButton.querySelector(".notif-dot");
+  if (dot) {
+    dot.style.display = state.total > 0 ? "block" : "none";
+  }
+
+  notifButton.title =
+    state.total > 0
+      ? `${state.total} notification(s) non ouvertes`
+      : "Aucune nouvelle notification";
+}
+
+function showNotificationsToast() {
+  if (typeof showToast !== "function") return;
+
+  const state = latestAdminNotificationState;
+  if (state.total <= 0) {
+    showToast("Aucune nouvelle notification.", true);
+    return;
+  }
+
+  showToast(
+    `Nouvelles notifications : ${state.total}<br>` +
+      `Réservations: ${state.reservations} · Avis: ${state.reviews} · Messages: ${state.messages}`,
+    true,
+  );
+}
+
+async function refreshAdminNotificationUI() {
+  if (typeof adminFetch !== "function") return;
+
+  try {
+    const [reservations, reviews, messages] = await Promise.all([
+      adminFetch("/api/admin/reservations"),
+      adminFetch("/api/admin/reviews"),
+      adminFetch("/api/admin/contact-messages"),
+    ]);
+
+    const reservationsCount = countUnseen(reservations, getSeenAt("reservations"));
+    const reviewsCount = countUnseen(reviews, getSeenAt("reviews"));
+    const messagesCount = countUnseen(messages, getSeenAt("messages"));
+    const total = reservationsCount + reviewsCount + messagesCount;
+
+    latestAdminNotificationState = {
+      reservations: reservationsCount,
+      reviews: reviewsCount,
+      messages: messagesCount,
+      total,
+    };
+
+    setSidebarBadge("resAdmin.html", reservationsCount);
+    setSidebarBadge("reviwAdmin.html", reviewsCount);
+    setSidebarBadge("contactAdmin.html", messagesCount);
+    updateTopbarNotification(latestAdminNotificationState);
+  } catch (_) {
+    // Silent fail: keep navigation usable even if notifications fail.
+  }
+}
+
+function setupNotificationButton() {
+  const notifButton = document.querySelector(".topbar-notif");
+  if (!notifButton) return;
+
+  notifButton.addEventListener("click", showNotificationsToast);
+}
+
+markCurrentAdminSectionSeen();
+setupNotificationButton();
+refreshAdminNotificationUI();
+setInterval(refreshAdminNotificationUI, 30000);
+
+window.refreshAdminNotificationUI = refreshAdminNotificationUI;
+window.markCurrentAdminSectionSeen = markCurrentAdminSectionSeen;
+
 // Mobile hamburger
 const hamburgerAdmin = document.getElementById("hamburgerAdmin");
 if (hamburgerAdmin) {

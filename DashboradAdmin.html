@@ -23,10 +23,10 @@
   <nav class="sidebar-nav">
     <div class="nav-section-label">Principal</div>
     <a href="DashboradAdmin.html"     class="active" data-page="DashboradAdmin.html">    <i class="fas fa-chart-line"></i>    Tableau de Bord</a>
-    <a href="resAdmin.html"  data-page="resAdmin.html">                <i class="fas fa-calendar-check"></i> Réservations    <span class="badge">3</span></a>
-    <a href="reviwAdmin.html"       data-page="reviwAdmin.html">                     <i class="fas fa-star"></i>           Avis Clients    <span class="badge">5</span></a>
+    <a href="resAdmin.html"  data-page="resAdmin.html">                <i class="fas fa-calendar-check"></i> Réservations    <span class="badge" style="display:none;"></span></a>
+    <a href="reviwAdmin.html"       data-page="reviwAdmin.html">                     <i class="fas fa-star"></i>           Avis Clients    <span class="badge" style="display:none;"></span></a>
     <div class="nav-section-label">Gestion</div>
-    <a href="contactAdmin.html"      data-page="contactAdmin.html">                    <i class="fas fa-envelope"></i>       Messages        <span class="badge">2</span></a>
+    <a href="contactAdmin.html"      data-page="contactAdmin.html">                    <i class="fas fa-envelope"></i>       Messages        <span class="badge" style="display:none;"></span></a>
     <div class="nav-section-label">Paramètres</div>
     <a href="settingsAdmin.html"      data-page="settingsAdmin.html">                    <i class="fas fa-cog"></i>            Paramètres</a>
   </nav>
@@ -103,50 +103,7 @@
       <!-- Activity -->
       <div class="chart-card">
         <div class="chart-title">Activité Récente</div>
-        <div class="activity-list">
-          <div class="activity-item">
-            <div class="activity-dot"></div>
-            <div>
-              <div class="activity-text"><strong>Nadia Belhaj</strong> a réservé pour 4 personnes</div>
-              <div class="activity-time">Il y a 12 min</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot olive"></div>
-            <div>
-              <div class="activity-text">Nouvel avis ★★★★★ de <strong>Pierre Leblanc</strong></div>
-              <div class="activity-time">Il y a 34 min</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot spice"></div>
-            <div>
-              <div class="activity-text"><strong>Amira Khelifi</strong> a annulé sa réservation (dim. 25)</div>
-              <div class="activity-time">Il y a 1h 15min</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot"></div>
-            <div>
-              <div class="activity-text">Nouveau message de <strong>Hamza Triki</strong> – Événement privé</div>
-              <div class="activity-time">Il y a 2h 03min</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot olive"></div>
-            <div>
-              <div class="activity-text">Réservation confirmée pour <strong>Sonia Zarrouk</strong> × 6</div>
-              <div class="activity-time">Il y a 3h 18min</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot spice"></div>
-            <div>
-              <div class="activity-text">Avis ★★★ reçu – en attente de réponse</div>
-              <div class="activity-time">Il y a 5h 42min</div>
-            </div>
-          </div>
-        </div>
+        <div class="activity-list" id="activityList"></div>
       </div>
     </div>
 
@@ -174,10 +131,99 @@
     });
   }
 
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function timeAgo(value) {
+    if (!value) return 'Date inconnue';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return 'Date inconnue';
+
+    const diffMs = Date.now() - date.getTime();
+    const mins = Math.max(1, Math.floor(diffMs / 60000));
+    if (mins < 60) return `Il y a ${mins} min`;
+
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+    if (hours < 24) {
+      return remMins > 0 ? `Il y a ${hours}h ${remMins}min` : `Il y a ${hours}h`;
+    }
+
+    const days = Math.floor(hours / 24);
+    return `Il y a ${days} jour${days > 1 ? 's' : ''}`;
+  }
+
+  function buildActivities(reservations, reviews, messages) {
+    const reservationActivities = (reservations || []).map((reservation) => ({
+      type: 'reservation',
+      createdAt: reservation.createdAt,
+      text: `<strong>${escapeHtml(`${reservation.firstName} ${reservation.lastName}`)}</strong> a réservé pour ${reservation.guestsCount} personne${reservation.guestsCount > 1 ? 's' : ''}`,
+      dotClass: reservation.status === 'CANCELLED' ? 'spice' : '',
+    }));
+
+    const reviewActivities = (reviews || []).map((review) => ({
+      type: 'review',
+      createdAt: review.createdAt,
+      text: `Nouvel avis ${'★'.repeat(review.rating)} de <strong>${escapeHtml(review.fullName)}</strong>`,
+      dotClass: 'olive',
+    }));
+
+    const messageActivities = (messages || []).map((message) => ({
+      type: 'message',
+      createdAt: message.createdAt,
+      text: `Nouveau message de <strong>${escapeHtml(`${message.firstName} ${message.lastName}`)}</strong> – ${escapeHtml(message.subject)}`,
+      dotClass: '',
+    }));
+
+    return [...reservationActivities, ...reviewActivities, ...messageActivities]
+      .filter((item) => item.createdAt)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 8);
+  }
+
+  function renderRecentActivity(items) {
+    const list = document.getElementById('activityList');
+    if (!list) return;
+
+    if (!items.length) {
+      list.innerHTML = `
+        <div class="activity-item">
+          <div class="activity-dot"></div>
+          <div>
+            <div class="activity-text">Aucune activité récente pour le moment.</div>
+            <div class="activity-time">En attente de nouvelles données</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = items.map((item) => `
+      <div class="activity-item">
+        <div class="activity-dot ${item.dotClass}"></div>
+        <div>
+          <div class="activity-text">${item.text}</div>
+          <div class="activity-time">${timeAgo(item.createdAt)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
   async function loadDashboard() {
     try {
-      const stats = await adminFetch('/api/admin/dashboard');
-      const weekly = await adminFetch('/api/admin/dashboard/weekly-reservations');
+      const [stats, weekly, reservations, reviews, messages] = await Promise.all([
+        adminFetch('/api/admin/dashboard'),
+        adminFetch('/api/admin/dashboard/weekly-reservations'),
+        adminFetch('/api/admin/reservations'),
+        adminFetch('/api/admin/reviews'),
+        adminFetch('/api/admin/contact-messages')
+      ]);
 
       document.getElementById('statToday').textContent = stats.reservationsToday;
       document.getElementById('statPending').textContent = stats.pendingReservations;
@@ -186,6 +232,7 @@
       document.getElementById('statTotal').textContent = `${stats.totalReservations} réservations`;
 
       renderMiniChart(weekly.labels || [], weekly.values || []);
+      renderRecentActivity(buildActivities(reservations, reviews, messages));
     } catch (error) {
       showToast(error.message || 'Erreur de chargement', false);
     }
