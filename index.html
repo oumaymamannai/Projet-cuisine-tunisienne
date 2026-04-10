@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
@@ -13,22 +13,35 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <style>/* ─── FORM EFFECTS ─── */
-    .form-group { position: relative; }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
-    }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(201,168,76,0.15), 0 0 0 2px rgba(201,168,76,0.2);
-      outline: none;
-    }
-    .form-group label { transition: color 0.25s ease; }
-    .form-group:focus-within label { color: var(--gold, #c9a84c); }</style>
+    <style>
+      /* ─── FORM EFFECTS ─── */
+      .form-group {
+        position: relative;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        transition:
+          border-color 0.3s ease,
+          box-shadow 0.3s ease,
+          transform 0.25s ease;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        transform: translateY(-1px);
+        box-shadow:
+          0 4px 20px rgba(201, 168, 76, 0.15),
+          0 0 0 2px rgba(201, 168, 76, 0.2);
+        outline: none;
+      }
+      .form-group label {
+        transition: color 0.25s ease;
+      }
+      .form-group:focus-within label {
+        color: var(--gold, #c9a84c);
+      }
+    </style>
   </head>
   <body>
     <!-- NAV -->
@@ -147,7 +160,7 @@
         <div class="dishes-grid">
           <div class="dish-card">
             <div class="dish-img-wrap">
-              <img src="\images\Japanese GYOZA (Dumplings).jfif" alt="GYOZA" />
+              <img src="\images\GYOZA.jpg" alt="GYOZA" />
               <span class="dish-tag">Chef's Choice</span>
             </div>
             <div class="dish-info">
@@ -168,7 +181,7 @@
 
           <div class="dish-card featured">
             <div class="dish-img-wrap">
-              <img src="images\One Pot Spicy Rigatoni.jfif" alt="Rigatoni" />
+              <img src="images\Rigatoni.jpg" alt="Rigatoni" />
               <span class="dish-tag">Signature Mondélys</span>
             </div>
             <div class="dish-info">
@@ -189,7 +202,7 @@
 
           <div class="dish-card">
             <div class="dish-img-wrap">
-              <img src="images\maklouba.jfif" alt="Maqlouba" />
+              <img src="images\maklouba.jpg" alt="Maqlouba" />
               <span class="dish-tag">Tradition</span>
             </div>
             <div class="dish-info">
@@ -279,82 +292,184 @@
       </div>
     </section>
 
-<!-- ========== TESTIMONIALS + FORMULAIRE AVIS (version premium) ========== -->
-<section class="testimonials section" style="background: var(--ivory2);">
-  <div class="container">
-    <p class="section-label center">Avis Clients</p>
-    <h2 class="section-title center">Ils ont <em>Voyagé</em> avec Nous</h2>
+    <!-- ========== TESTIMONIALS + FORMULAIRE AVIS (version premium) ========== -->
+    <section class="testimonials section" style="background: var(--ivory2)">
+      <div class="container">
+        <p class="section-label center">Avis Clients</p>
+        <h2 class="section-title center">Ils ont <em>Voyagé</em> avec Nous</h2>
 
-    <!-- Grille dynamique des avis -->
-    <div class="testi-grid" id="publicReviewsGrid"></div>
+        <!-- Grille dynamique des avis -->
+        <div class="testi-grid" id="publicReviewsGrid"></div>
 
-    <!-- Bloc formulaire avec bouton d'ouverture -->
-    <div style="max-width:760px; margin:3rem auto 0; text-align:center;">
-      <div id="showReviewBtnWrapper">
-        <button id="showReviewBtn" class="btn btn-gold">
-          <i class="fas fa-pen-fancy" style="margin-right:8px"></i> Laisser un avis
-        </button>
-      </div>
-
-      <div id="reviewFormWrapper" style="display:none; margin-top:2rem; background:var(--white); padding:2rem; border-radius:12px; box-shadow:var(--shadow); text-align:left;">
-        <h3 style="font-family:var(--ff-display); font-size:1.5rem; margin-bottom:0.5rem;">Partagez votre expérience</h3>
-        <span style="display:block; margin-bottom:1.5rem; color:var(--text-light);">Votre retour nous aide à nous améliorer.</span>
-
-        <form id="reviewForm" novalidate>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="reviewName">Nom complet <span style="color:var(--gold)">*</span></label>
-              <input type="text" id="reviewName" placeholder="Sophie Martin" required />
-            </div>
-            <div class="form-group">
-              <label for="reviewEmail">Adresse email <span style="color:var(--gold)">*</span></label>
-              <input type="email" id="reviewEmail" placeholder="sophie@example.com" required />
-            </div>
-          </div>
-
-          <div class="form-row" style="margin-bottom:1.5rem">
-            <div class="form-group">
-              <label for="reviewRating">Note <span style="color:var(--gold)">*</span></label>
-              <select id="reviewRating" required>
-                <option value="">Sélectionnez une note</option>
-                <option value="5">★★★★★ — Excellent</option>
-                <option value="4">★★★★☆ — Très bien</option>
-                <option value="3">★★★☆☆ — Bien</option>
-                <option value="2">★★☆☆☆ — Passable</option>
-                <option value="1">★☆☆☆☆ — Décevant</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="reviewTitle">Titre de l'avis (optionnel)</label>
-              <input type="text" id="reviewTitle" placeholder="Un dîner inoubliable" />
-            </div>
-          </div>
-
-          <div class="form-group" style="margin-bottom:1.5rem">
-            <label for="reviewMessage">Votre message <span style="color:var(--gold)">*</span></label>
-            <textarea id="reviewMessage" rows="4" placeholder="Décrivez votre expérience chez Mondélys..." required></textarea>
-          </div>
-
-          <div class="form-group" style="flex-direction:row; align-items:center; gap:0.75rem; margin-bottom:1.5rem">
-            <label for="reviewConsent" style="text-transform:none; letter-spacing:0; font-size:0.9rem; cursor:pointer;">
-              J'accepte que mon avis soit publié et que mes données soient traitées conformément à la politique de confidentialité.
-            </label>
-          </div>
-
-          <div class="form-submit" style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1rem;">
-            <button type="button" id="cancelReviewBtn" class="btn btn-outline" style="background:transparent; border:1px solid var(--ivory3); color:var(--text);">
-              Annuler
-            </button>
-            <button type="submit" class="btn btn-gold">
-              <i class="fas fa-paper-plane" style="margin-right:8px"></i> Publier mon avis
+        <!-- Bloc formulaire avec bouton d'ouverture -->
+        <div style="max-width: 760px; margin: 3rem auto 0; text-align: center">
+          <div id="showReviewBtnWrapper">
+            <button id="showReviewBtn" class="btn btn-gold">
+              <i class="fas fa-pen-fancy" style="margin-right: 8px"></i> Laisser
+              un avis
             </button>
           </div>
-        </form>
-        <div id="reviewMsg" style="display:none; margin-top:1rem; padding:1rem; border-radius:6px; font-family:var(--ff-ui); font-size:0.85rem;"></div>
+
+          <div
+            id="reviewFormWrapper"
+            style="
+              display: none;
+              margin-top: 2rem;
+              background: var(--white);
+              padding: 2rem;
+              border-radius: 12px;
+              box-shadow: var(--shadow);
+              text-align: left;
+            "
+          >
+            <h3
+              style="
+                font-family: var(--ff-display);
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+              "
+            >
+              Partagez votre expérience
+            </h3>
+            <span
+              style="
+                display: block;
+                margin-bottom: 1.5rem;
+                color: var(--text-light);
+              "
+              >Votre retour nous aide à nous améliorer.</span
+            >
+
+            <form id="reviewForm" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="reviewName"
+                    >Nom complet
+                    <span style="color: var(--gold)">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="reviewName"
+                    placeholder="Sophie Martin"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="reviewEmail"
+                    >Adresse email
+                    <span style="color: var(--gold)">*</span></label
+                  >
+                  <input
+                    type="email"
+                    id="reviewEmail"
+                    placeholder="sophie@example.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-row" style="margin-bottom: 1.5rem">
+                <div class="form-group">
+                  <label for="reviewRating"
+                    >Note <span style="color: var(--gold)">*</span></label
+                  >
+                  <select id="reviewRating" required>
+                    <option value="">Sélectionnez une note</option>
+                    <option value="5">★★★★★ — Excellent</option>
+                    <option value="4">★★★★☆ — Très bien</option>
+                    <option value="3">★★★☆☆ — Bien</option>
+                    <option value="2">★★☆☆☆ — Passable</option>
+                    <option value="1">★☆☆☆☆ — Décevant</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="reviewTitle">Titre de l'avis (optionnel)</label>
+                  <input
+                    type="text"
+                    id="reviewTitle"
+                    placeholder="Un dîner inoubliable"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem">
+                <label for="reviewMessage"
+                  >Votre message
+                  <span style="color: var(--gold)">*</span></label
+                >
+                <textarea
+                  id="reviewMessage"
+                  rows="4"
+                  placeholder="Décrivez votre expérience chez Mondélys..."
+                  required
+                ></textarea>
+              </div>
+
+              <div
+                class="form-group"
+                style="
+                  flex-direction: row;
+                  align-items: center;
+                  gap: 0.75rem;
+                  margin-bottom: 1.5rem;
+                "
+              >
+                <label
+                  for="reviewConsent"
+                  style="
+                    text-transform: none;
+                    letter-spacing: 0;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                  "
+                >
+                  J'accepte que mon avis soit publié et que mes données soient
+                  traitées conformément à la politique de confidentialité.
+                </label>
+              </div>
+
+              <div
+                class="form-submit"
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  gap: 1rem;
+                  margin-top: 1rem;
+                "
+              >
+                <button
+                  type="button"
+                  id="cancelReviewBtn"
+                  class="btn btn-outline"
+                  style="
+                    background: transparent;
+                    border: 1px solid var(--ivory3);
+                    color: var(--text);
+                  "
+                >
+                  Annuler
+                </button>
+                <button type="submit" class="btn btn-gold">
+                  <i class="fas fa-paper-plane" style="margin-right: 8px"></i>
+                  Publier mon avis
+                </button>
+              </div>
+            </form>
+            <div
+              id="reviewMsg"
+              style="
+                display: none;
+                margin-top: 1rem;
+                padding: 1rem;
+                border-radius: 6px;
+                font-family: var(--ff-ui);
+                font-size: 0.85rem;
+              "
+            ></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
     <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-top-pattern"></div>
@@ -419,86 +534,93 @@
       </div>
     </footer>
 
-<script src="main.js"></script>
-<script src="publicSettings.js"></script>
-<script>
-  function starText(n) {
-    return '★'.repeat(n) + '☆'.repeat(5 - n);
-  }
+    <script src="main.js"></script>
+    <script src="publicSettings.js"></script>
+    <script>
+      function starText(n) {
+        return "★".repeat(n) + "☆".repeat(5 - n);
+      }
 
-  function avatar(name) {
-    const seed = encodeURIComponent((name || 'client').toLowerCase());
-    return `https://api.dicebear.com/9.x/initials/svg?seed=${seed}`;
-  }
+      function avatar(name) {
+        const seed = encodeURIComponent((name || "client").toLowerCase());
+        return `https://api.dicebear.com/9.x/initials/svg?seed=${seed}`;
+      }
 
-  function renderPublicReviews(reviews) {
-    const grid = document.getElementById('publicReviewsGrid');
-    const safe = Array.isArray(reviews) ? reviews.slice(0, 6) : [];
-    if (!safe.length) {
-      grid.innerHTML = '<div class="testi-card"><div class="stars">★★★★★</div><p>"Aucun avis pour le moment. Soyez le premier à partager votre expérience !"</p><div class="testi-author"><img src="https://api.dicebear.com/9.x/initials/svg?seed=mondelys" alt=""/><div><strong>Équipe Mondélys</strong><span>Tunis, Tunisie</span></div></div></div>';
-      return;
-    }
+      function renderPublicReviews(reviews) {
+        const grid = document.getElementById("publicReviewsGrid");
+        const safe = Array.isArray(reviews) ? reviews.slice(0, 6) : [];
+        if (!safe.length) {
+          grid.innerHTML =
+            '<div class="testi-card"><div class="stars">★★★★★</div><p>"Aucun avis pour le moment. Soyez le premier à partager votre expérience !"</p><div class="testi-author"><img src="https://api.dicebear.com/9.x/initials/svg?seed=mondelys" alt=""/><div><strong>Équipe Mondélys</strong><span>Tunis, Tunisie</span></div></div></div>';
+          return;
+        }
 
-    grid.innerHTML = safe.map((review) => `
+        grid.innerHTML = safe
+          .map(
+            (review) => `
       <div class="testi-card">
         <div class="stars">${starText(review.rating)}</div>
         <p>"${review.message}"</p>
         <div class="testi-author">
           <img src="${avatar(review.fullName)}" alt="${review.fullName}"/>
-          <div><strong>${review.fullName}</strong><span>${review.title || 'Client Mondélys'}</span></div>
+          <div><strong>${review.fullName}</strong><span>${review.title || "Client Mondélys"}</span></div>
         </div>
       </div>
-    `).join('');
-  }
-
-  async function loadPublicReviews() {
-    try {
-      const response = await fetch('/api/reviews/public');
-      const reviews = response.ok ? await response.json() : [];
-      renderPublicReviews(reviews);
-    } catch (_) {
-      renderPublicReviews([]);
-    }
-  }
-
-  document.getElementById('reviewForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const button = event.target.querySelector('button[type="submit"]');
-    button.disabled = true;
-    button.textContent = 'Publication...';
-
-    const payload = {
-      fullName: document.getElementById('reviewName').value.trim(),
-      email: document.getElementById('reviewEmail').value.trim(),
-      rating: Number(document.getElementById('reviewRating').value),
-      title: document.getElementById('reviewTitle').value.trim(),
-      message: document.getElementById('reviewMessage').value.trim()
-    };
-
-    try {
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        throw new Error(body.message || 'Erreur lors de la publication');
+    `,
+          )
+          .join("");
       }
 
-      event.target.reset();
-      await loadPublicReviews();
-      alert('Merci ! Votre avis a été publié.');
-    } catch (error) {
-      alert(error.message || 'Erreur serveur');
-    } finally {
-      button.disabled = false;
-      button.textContent = 'Publier mon avis';
-    }
-  });
+      async function loadPublicReviews() {
+        try {
+          const response = await fetch("/api/reviews/public");
+          const reviews = response.ok ? await response.json() : [];
+          renderPublicReviews(reviews);
+        } catch (_) {
+          renderPublicReviews([]);
+        }
+      }
 
-  loadPublicReviews();
-</script>
-</body>
+      document
+        .getElementById("reviewForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const button = event.target.querySelector('button[type="submit"]');
+          button.disabled = true;
+          button.textContent = "Publication...";
+
+          const payload = {
+            fullName: document.getElementById("reviewName").value.trim(),
+            email: document.getElementById("reviewEmail").value.trim(),
+            rating: Number(document.getElementById("reviewRating").value),
+            title: document.getElementById("reviewTitle").value.trim(),
+            message: document.getElementById("reviewMessage").value.trim(),
+          };
+
+          try {
+            const response = await fetch("/api/reviews", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+              const body = await response.json().catch(() => ({}));
+              throw new Error(body.message || "Erreur lors de la publication");
+            }
+
+            event.target.reset();
+            await loadPublicReviews();
+            alert("Merci ! Votre avis a été publié.");
+          } catch (error) {
+            alert(error.message || "Erreur serveur");
+          } finally {
+            button.disabled = false;
+            button.textContent = "Publier mon avis";
+          }
+        });
+
+      loadPublicReviews();
+    </script>
+  </body>
 </html>
