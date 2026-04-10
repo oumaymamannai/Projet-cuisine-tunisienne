@@ -599,6 +599,14 @@ ul { list-style: none; }
   position: relative;
   overflow: hidden;
 }
+.code {
+  font-size: 10px;
+  margin-right: 6px;
+  letter-spacing: -1px;
+  vertical-align: middle;
+  color: inherit;   /* 🔥 IMPORTANT */
+  opacity: 1;       /* enlève l'effet fade */
+}
 
 .tab-btn::before {
   content: '';
