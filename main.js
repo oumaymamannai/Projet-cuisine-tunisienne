@@ -146,3 +146,24 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   console.log("%cGastronomie du Monde · Tunis, Tunisie", "color: #888;");
 });
+// Affichage du formulaire d’avis
+const showReviewBtn = document.getElementById('showReviewBtn');
+const reviewFormWrapper = document.getElementById('reviewFormWrapper');
+const showReviewBtnWrapper = document.getElementById('showReviewBtnWrapper');
+const cancelReviewBtn = document.getElementById('cancelReviewBtn');
+
+if (showReviewBtn && reviewFormWrapper && showReviewBtnWrapper) {
+  showReviewBtn.addEventListener('click', () => {
+    reviewFormWrapper.style.display = 'block';
+    showReviewBtnWrapper.style.display = 'none';
+  });
+}
+
+if (cancelReviewBtn) {
+  cancelReviewBtn.addEventListener('click', () => {
+    reviewFormWrapper.style.display = 'none';
+    showReviewBtnWrapper.style.display = 'block';
+    // Optionnel : réinitialiser le formulaire
+    document.getElementById('reviewForm')?.reset();
+  });
+}

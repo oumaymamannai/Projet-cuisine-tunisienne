@@ -959,3 +959,23 @@ ul { list-style: none; }
   .ing-grid { grid-template-columns: 1fr; }
   .reservation-form, .contact-form { padding: 2rem 1.5rem; }
 }
+/* Effets focus identiques au formulaire de contact */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(184,137,90,0.15), 0 0 0 2px rgba(184,137,90,0.2);
+  outline: none;
+}
+.form-group:focus-within label {
+  color: var(--gold);
+}
+
+/* Animation d'apparition du formulaire */
+#reviewFormWrapper {
+  animation: formFadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes formFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
