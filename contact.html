@@ -9,21 +9,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
   <style>
-    /* =============================
-       SMOOTH TRANSITIONS & EFFECTS
-       ============================= */
+    /* ─── CSS RESTENT EN PLACE (inchangés) ─── */
 
     #navbar {
       transition: background 0.4s ease, box-shadow 0.4s ease, padding 0.3s ease;
     }
-    #navbar.scrolled {
-      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
-    }
+    #navbar.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,0.18); }
 
-    .nav-links a {
-      position: relative;
-      transition: color 0.25s ease;
-    }
+    .nav-links a { position: relative; transition: color 0.25s ease; }
     .nav-links a::after {
       content: '';
       position: absolute;
@@ -35,13 +28,8 @@
     .nav-links a:hover::after,
     .nav-links a.active::after { width: 100%; }
 
-    .nav-cta {
-      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
-    }
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.22);
-    }
+    .nav-cta { transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.22); }
 
     .page-header-content {
       animation: headerReveal 0.9s cubic-bezier(.22,1,.36,1) 0.2s both;
@@ -71,11 +59,8 @@
     /* ─── CONTACT ITEM HOVER ─── */
     .contact-item {
       position: relative;
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                  background 0.3s ease,
-                  box-shadow 0.35s ease;
-      cursor: default;
-      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease, box-shadow 0.35s ease;
+      cursor: default; overflow: hidden;
     }
     .contact-item::before {
       content: '';
@@ -85,21 +70,11 @@
       background: var(--gold, #c9a84c);
       transition: height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .contact-item:hover {
-      transform: translateX(6px);
-      background: rgba(201,168,76,0.04);
-      box-shadow: -6px 0 24px rgba(201,168,76,0.1);
-    }
+    .contact-item:hover { transform: translateX(6px); background: rgba(201,168,76,0.04); box-shadow: -6px 0 24px rgba(201,168,76,0.1); }
     .contact-item:hover::before { height: 100%; }
 
-    .contact-icon {
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  background 0.3s ease;
-    }
-    .contact-item:hover .contact-icon {
-      transform: scale(1.15) rotate(-5deg);
-      background: rgba(201,168,76,0.15);
-    }
+    .contact-icon { transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease; }
+    .contact-item:hover .contact-icon { transform: scale(1.15) rotate(-5deg); background: rgba(201,168,76,0.15); }
 
     /* ─── FORM EFFECTS ─── */
     .form-group { position: relative; }
@@ -121,8 +96,7 @@
     /* ─── BUTTON ─── */
     .btn-gold {
       position: relative; overflow: hidden;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.3s ease, letter-spacing 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, letter-spacing 0.3s ease;
     }
     .btn-gold::after {
       content: '';
@@ -132,55 +106,32 @@
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .btn-gold:hover::after { transform: translateX(0); }
-    .btn-gold:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 32px rgba(201,168,76,0.35);
-      letter-spacing: 1.5px;
-    }
+    .btn-gold:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 32px rgba(201,168,76,0.35); letter-spacing: 1.5px; }
     .btn-gold:active { transform: translateY(0) scale(0.98); }
 
     /* ─── FAQ ENHANCED ─── */
     .faq-item {
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                  box-shadow 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
     }
-    .faq-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    }
+    .faq-item:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
     .faq-question {
       transition: color 0.25s ease, letter-spacing 0.25s ease;
       cursor: pointer;
     }
-    .faq-item.open .faq-question {
-      color: var(--gold, #c9a84c);
-    }
-    .faq-question i {
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .faq-item.open .faq-question i {
-      transform: rotate(180deg);
-    }
+    .faq-item.open .faq-question { color: var(--gold, #c9a84c); }
+    .faq-question i { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .faq-item.open .faq-question i { transform: rotate(180deg); }
     .faq-answer {
       overflow: hidden;
       max-height: 0;
       opacity: 0;
-      transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-                  opacity 0.4s ease 0.05s,
-                  padding 0.4s ease;
+      transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.05s, padding 0.4s ease;
     }
-    .faq-item.open .faq-answer {
-      max-height: 300px;
-      opacity: 1;
-    }
+    .faq-item.open .faq-answer { max-height: 300px; opacity: 1; }
 
     /* ─── CONTACT FORM PANEL ─── */
-    .contact-form {
-      transition: box-shadow 0.4s ease;
-    }
-    .contact-form:hover {
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(201,168,76,0.1);
-    }
+    .contact-form { transition: box-shadow 0.4s ease; }
+    .contact-form:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(201,168,76,0.1); }
 
     /* ─── SUCCESS MESSAGE ─── */
     .success-msg {
@@ -207,18 +158,6 @@
       100% { opacity: 0; transform: translate(var(--tx, 30px), -120px) scale(0.3); }
     }
 
-    /* ─── NAV UNDERLINE ─── */
-    .nav-links a { position: relative; }
-    .nav-links a::after {
-      content: '';
-      position: absolute; bottom: -2px; left: 0;
-      width: 0; height: 1px;
-      background: var(--gold, #c9a84c);
-      transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .nav-links a:hover::after,
-    .nav-links a.active::after { width: 100%; }
-
     /* ─── SCROLL PROGRESS ─── */
     .scroll-progress {
       position: fixed; top: 0; left: 0;
@@ -240,22 +179,13 @@
 
     /* ─── SOCIAL ICONS HOVER ─── */
     .socials a {
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease !important;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease !important;
     }
-    .socials a:hover {
-      transform: translateY(-4px) scale(1.1) !important;
-      box-shadow: 0 6px 20px rgba(201,168,76,0.25);
-    }
+    .socials a:hover { transform: translateY(-4px) scale(1.1) !important; box-shadow: 0 6px 20px rgba(201,168,76,0.25); }
 
     /* ─── MAP PLACEHOLDER ─── */
-    .map-placeholder {
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
-    }
-    .map-placeholder:hover {
-      box-shadow: 0 8px 30px rgba(201,168,76,0.12);
-      transform: translateY(-2px);
-    }
+    .map-placeholder { transition: box-shadow 0.3s ease, transform 0.3s ease; }
+    .map-placeholder:hover { box-shadow: 0 8px 30px rgba(201,168,76,0.12); transform: translateY(-2px); }
 
     /* ─── CHECKBOX CUSTOM ─── */
     #cCo {
@@ -318,10 +248,8 @@
 </head>
 <body>
 
-<!-- Scroll progress -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- BOUTON FLOTTANT -->
 <a href="reservation.html" class="float-badge" title="Réserver une table">
   <i class="fas fa-utensils"></i>
   <span>Réserver</span>
@@ -361,7 +289,7 @@
       <div class="contact-info reveal-left">
         <p class="section-label">Coordonnées</p>
         <h2>Toujours à votre <em style="color: var(--gold)">Service</em></h2>
-        <p>Pour toute question sur le menu international, une réservation de groupe, un événement privé ou le menu dégustation — notre équipe vous répond dans les 24h.</p>
+        <p>Pour toute question — notre équipe vous répond dans les 24h.</p>
         <div class="contact-details">
           <div class="contact-item reveal" style="transition-delay:0.1s">
             <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
@@ -393,7 +321,6 @@
           </div>
         </div>
 
-        <!-- Map placeholder -->
         <div class="map-placeholder reveal" style="
           width: 100%; height: 220px;
           background: var(--ivory2);
@@ -418,6 +345,8 @@
 
       <div class="contact-form reveal-right">
         <h3>✦ Envoyer un Message</h3>
+
+        <!-- novalidate → Validator gère tout -->
         <form id="contactForm" novalidate>
           <div class="form-row reveal" style="transition-delay:0.1s">
             <div class="form-group">
@@ -469,10 +398,12 @@
             </button>
           </div>
         </form>
-        <div class="success-msg" id="contactSuccess">
+
+        <!-- Message de succès -->
+        <div class="success-msg" id="contactSuccess" style="display:none">
           <i class="fas fa-check-circle" style="font-size: 2rem; display: block; margin-bottom: 0.75rem"></i>
           <strong style="display: block; font-family: var(--ff-display); font-size: 1.1rem; margin-bottom: 0.5rem;">Message Envoyé ! ✦</strong>
-          Notre équipe vous répondra dans les 24 heures. Merci de votre confiance et bon voyage avec Mondélys !
+          Notre équipe vous répondra dans les 24 heures. Merci de votre confiance !
         </div>
       </div>
 
@@ -488,39 +419,27 @@
     <div style="margin-top: 3rem">
       <div class="faq-item reveal">
         <div class="faq-question">Comment fonctionne le menu dégustation ? <i class="fas fa-chevron-down"></i></div>
-        <div class="faq-answer">
-          <p>Notre menu dégustation 7 plats (480 TND/personne) est un tour du monde culinaire en une soirée — Japon, France, Inde, Mexique, Italie et deux escales surprise. Il est disponible en accord mets-vins (+180 TND). Une réservation 48h à l'avance est obligatoire pour 2 personnes minimum, afin que nos 5 chefs puissent préparer chaque plat avec soin.</p>
-        </div>
+        <div class="faq-answer"><p>Notre menu dégustation 7 plats (480 TND/personne) est un tour du monde culinaire. Une réservation 48h à l'avance est obligatoire pour 2 personnes minimum.</p></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-question">Gérez-vous les allergies alimentaires ? <i class="fas fa-chevron-down"></i></div>
-        <div class="faq-answer">
-          <p>Oui, absolument. Notre équipe est formée pour gérer toutes les allergies et intolérances courantes : gluten, lactose, fruits à coque, fruits de mer, etc. Signalez votre allergie lors de la réservation ou à votre arrivée. Nous adaptons les plats de chaque cuisine représentée en conséquence.</p>
-        </div>
+        <div class="faq-answer"><p>Oui, absolument. Notre équipe gère toutes les allergies courantes. Signalez votre allergie lors de la réservation ou à votre arrivée.</p></div>
       </div>
       <div class="faq-item reveal">
-        <div class="faq-question">Proposez-vous des options végétariennes ou végétaliennes ? <i class="fas fa-chevron-down"></i></div>
-        <div class="faq-answer">
-          <p>Oui. Chaque cuisine du monde représentée chez Mondélys propose des options végétariennes et végétaliennes — miso aubergine japonaise, dal makhani indien, risotto truffe italien, guacamole mexicain, etc. Mentionnez votre préférence lors de la réservation.</p>
-        </div>
+        <div class="faq-question">Proposez-vous des options végétariennes ? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-answer"><p>Oui. Chaque cuisine représentée chez Mondélys propose des options végétariennes et végétaliennes. Mentionnez votre préférence lors de la réservation.</p></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-question">Pouvez-vous organiser des événements privés ? <i class="fas fa-chevron-down"></i></div>
-        <div class="faq-answer">
-          <p>Absolument. Nous disposons d'un salon privé pour 8 à 25 personnes avec décor immersif thématique. Pour les groupes plus importants, nous pouvons privatiser la salle entière. Mariages, anniversaires, séminaires, dîners d'affaires : contactez events@mondelys.tn pour un devis personnalisé.</p>
-        </div>
+        <div class="faq-answer"><p>Absolument. Nous disposons d'un salon privé pour 8 à 25 personnes. Contactez events@mondelys.tn pour un devis personnalisé.</p></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-question">D'où proviennent vos ingrédients ? <i class="fas fa-chevron-down"></i></div>
-        <div class="faq-answer">
-          <p>Nous importons des ingrédients d'origine directement auprès de producteurs certifiés : wagyu du Japon, truffes du Périgord, épices du Kerala, piments de Oaxaca, riz Carnaroli d'Italie. Les produits frais locaux sont sourcés chaque matin au marché de Tunis.</p>
-        </div>
+        <div class="faq-answer"><p>Nous importons des ingrédients d'origine certifiés : wagyu du Japon, truffes du Périgord, épices du Kerala. Les produits frais locaux viennent du marché de Tunis.</p></div>
       </div>
       <div class="faq-item reveal">
         <div class="faq-question">Y a-t-il un code vestimentaire ? <i class="fas fa-chevron-down"></i></div>
-        <div class="faq-answer">
-          <p>Nous recommandons une tenue élégante ou smart casual, en harmonie avec l'ambiance raffinée de Mondélys. Pour le dîner, particulièrement en week-end, une tenue soignée est appréciée. Le déjeuner est plus détendu. Pas de short ni de tongs en soirée.</p>
-        </div>
+        <div class="faq-answer"><p>Nous recommandons une tenue élégante ou smart casual. Pas de short ni de tongs en soirée.</p></div>
       </div>
     </div>
   </div>
@@ -571,6 +490,9 @@
 
 <script src="main.js"></script>
 <script src="publicSettings.js"></script>
+<!-- Utilitaires partagés : Toast, Validator, Skeleton, LazyImage -->
+<script src="mondelys-utils.js"></script>
+
 <script>
   /* ─── PAGE LOAD ─── */
   window.addEventListener('load', () => {
@@ -578,7 +500,6 @@
     spawnParticles();
   });
 
-  /* ─── PARTICLES ─── */
   function spawnParticles() {
     const header = document.getElementById('pageHeader');
     for (let i = 0; i < 18; i++) {
@@ -606,7 +527,6 @@
       }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
 
   /* ─── SCROLL PROGRESS ─── */
@@ -636,21 +556,41 @@
     });
   });
 
-  /* ─── CONTACT FORM ─── */
+  /* ──────────────────────────────────────────────────────────────
+     VALIDATION TEMPS-RÉEL — Formulaire de contact
+     Règles :
+       - cFn  : required (prénom)
+       - cLn  : required (nom)
+       - cEm  : required + format email
+       - cPh  : optionnel, mais validé si rempli
+       - cSu  : select (sujet non vide)
+       - cMs  : required + min 10 caractères
+  ────────────────────────────────────────────────────────────────── */
+  const contactForm = document.getElementById('contactForm');
+  const contactRules = {
+    cFn: ['required'],
+    cLn: ['required'],
+    cEm: ['required', 'email'],
+    cPh: ['phone'],   /* optionnel mais validé si rempli */
+    cSu: ['select'],
+    cMs: ['required', Validator.rules.minLen(10)],
+  };
+
+  /* Attache la validation temps-réel */
+  Validator.attach(contactForm, contactRules);
+
+  /* ─── SOUMISSION ─── */
   document.getElementById('contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const firstName = document.getElementById('cFn').value.trim();
-    const lastName  = document.getElementById('cLn').value.trim();
-    const email     = document.getElementById('cEm').value.trim();
-    const phone     = document.getElementById('cPh').value.trim();
-    const subject   = document.getElementById('cSu').value.trim();
-    const message   = document.getElementById('cMs').value.trim();
 
-    if (!firstName || !lastName || !email || !subject || !message) {
-      alert('Veuillez remplir tous les champs obligatoires.'); return;
+    /* Validation globale avant envoi */
+    if (!Validator.isFormValid(contactForm, contactRules)) {
+      Toast.show('Veuillez corriger les champs en rouge.', 'error');
+      return;
     }
     if (!document.getElementById('cCo').checked) {
-      alert('Veuillez accepter notre politique.'); return;
+      Toast.show('Veuillez accepter notre politique de confidentialité.', 'warning');
+      return;
     }
 
     const btn = e.target.querySelector('[type="submit"]');
@@ -662,16 +602,29 @@
       const response = await fetch('/api/contact-messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, email, phone, subject, message })
+        body: JSON.stringify({
+          firstName: document.getElementById('cFn').value.trim(),
+          lastName:  document.getElementById('cLn').value.trim(),
+          email:     document.getElementById('cEm').value.trim(),
+          phone:     document.getElementById('cPh').value.trim(),
+          subject:   document.getElementById('cSu').value.trim(),
+          message:   document.getElementById('cMs').value.trim(),
+        }),
       });
+
       if (!response.ok) {
         const body = await response.json().catch(() => ({}));
         throw new Error(body.message || 'Erreur lors de l\'envoi du message');
       }
+
+      /* Succès : affiche le bloc de confirmation + Toast */
       document.getElementById('contactForm').style.display = 'none';
       document.getElementById('contactSuccess').style.display = 'block';
+      Toast.show('Message envoyé ! Nous vous répondons dans les 24h.', 'success', 6000);
+
     } catch (error) {
-      alert(error.message || 'Erreur serveur');
+      /* Toast erreur (remplace le alert d'origine) */
+      Toast.show(error.message || 'Erreur serveur. Veuillez réessayer.', 'error');
       btn.innerHTML = originalHTML;
       btn.disabled = false;
     }

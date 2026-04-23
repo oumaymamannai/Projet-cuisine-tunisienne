@@ -7,6 +7,53 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="styleAdmin.css"/>
+
+  <style>
+    /* ── Skeleton admin : shimmer identique à mondelys-utils ── */
+    .skel-admin {
+      border-radius: 6px;
+      background: linear-gradient(
+        90deg,
+        rgba(201,168,76,0.08) 25%,
+        rgba(201,168,76,0.18) 50%,
+        rgba(201,168,76,0.08) 75%
+      );
+      background-size: 200% 100%;
+      animation: skel-shimmer-admin 1.6s ease-in-out infinite;
+    }
+    @keyframes skel-shimmer-admin {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── Skeleton table row ── */
+    .skel-tr td {
+      padding: 1rem 0.75rem;
+      vertical-align: middle;
+    }
+    .skel-cell {
+      height: 12px;
+      border-radius: 6px;
+      display: block;
+    }
+    .skel-cell-sm  { height: 9px; margin-top: 5px; }
+    .skel-badge {
+      height: 22px;
+      width: 70px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+    .skel-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+    .skel-btn {
+      height: 28px;
+      width: 28px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
 
@@ -99,7 +146,15 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="resBody"></tbody>
+          <tbody id="resBody">
+            <!-- Skeleton rows affichées dès l'ouverture -->
+            <tr class="skel-tr"><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:110px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:80px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:80px;"></div></td><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-badge"></div></td><td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td></tr>
+            <tr class="skel-tr"><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:100px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:90px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:80px;"></div></td><td><div class="skel-admin skel-badge"></div></td><td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td></tr>
+            <tr class="skel-tr"><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:120px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:75px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div></td><td><div class="skel-admin skel-cell" style="width:65px;"></div></td><td><div class="skel-admin skel-badge"></div></td><td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td></tr>
+            <tr class="skel-tr"><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:95px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:85px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:75px;"></div></td><td><div class="skel-admin skel-cell" style="width:72px;"></div></td><td><div class="skel-admin skel-badge"></div></td><td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td></tr>
+            <tr class="skel-tr"><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:105px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:80px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:82px;"></div></td><td><div class="skel-admin skel-cell" style="width:68px;"></div></td><td><div class="skel-admin skel-badge"></div></td><td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td></tr>
+            <tr class="skel-tr"><td><div class="skel-admin skel-cell" style="width:70px;"></div></td><td><div class="skel-admin skel-cell" style="width:115px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:88px;"></div></td><td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:60px;"></div></td><td><div class="skel-admin skel-cell" style="width:75px;"></div></td><td><div class="skel-admin skel-badge"></div></td><td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td></tr>
+          </tbody>
         </table>
       </div>
 
@@ -161,11 +216,29 @@
   let filteredRes = [];
 
   const statusMap = {
-    PENDING: '<span class="status status-pending">En attente</span>',
+    PENDING:   '<span class="status status-pending">En attente</span>',
     CONFIRMED: '<span class="status status-confirmed">Confirmée</span>',
-    ARRIVED: '<span class="status status-arrived">Arrivée</span>',
+    ARRIVED:   '<span class="status status-arrived">Arrivée</span>',
     CANCELLED: '<span class="status status-cancelled">Annulée</span>',
   };
+
+  /* ── Skeleton helpers ── */
+  function showTableSkeleton(rows = 6) {
+    document.getElementById('resBody').innerHTML = Array.from({ length: rows }, (_, i) => {
+      const w = [70, 100, 120, 95, 105, 115][i] || 100;
+      return `
+        <tr class="skel-tr">
+          <td><div class="skel-admin skel-cell" style="width:70px;"></div></td>
+          <td><div class="skel-admin skel-cell" style="width:${w}px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:${w-20}px;"></div></td>
+          <td><div class="skel-admin skel-cell" style="width:90px;"></div><div class="skel-admin skel-cell skel-cell-sm" style="width:45px;"></div></td>
+          <td><div class="skel-admin skel-cell" style="width:60px;"></div></td>
+          <td><div class="skel-admin skel-cell" style="width:${70+i*5}px;"></div></td>
+          <td><div class="skel-admin skel-cell" style="width:${65+i*3}px;"></div></td>
+          <td><div class="skel-admin skel-badge"></div></td>
+          <td><div class="skel-btn-group"><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div><div class="skel-admin skel-btn"></div></div></td>
+        </tr>`;
+    }).join('');
+  }
 
   function formatDate(d) {
     return new Date(d).toLocaleDateString('fr-FR', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
@@ -200,20 +273,15 @@
   }
 
   async function fetchReservations() {
+    showTableSkeleton();
     const search = document.getElementById('searchRes').value.trim();
     const status = document.getElementById('filterStatus').value;
     const params = new URLSearchParams();
     if (search) params.set('search', search);
     if (status) {
-      const serverStatus = {
-        'en-attente': 'PENDING',
-        'confirmée': 'CONFIRMED',
-        'arrivée': 'ARRIVED',
-        'annulée': 'CANCELLED'
-      }[status];
+      const serverStatus = { 'en-attente':'PENDING','confirmée':'CONFIRMED','arrivée':'ARRIVED','annulée':'CANCELLED' }[status];
       if (serverStatus) params.set('status', serverStatus);
     }
-
     const qs = params.toString() ? `?${params.toString()}` : '';
     reservations = await adminFetch(`/api/admin/reservations${qs}`);
     applyDateFilterAndRender();
@@ -225,33 +293,22 @@
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate() - today.getDay() + 1);
     startOfWeek.setHours(0, 0, 0, 0);
-
-    filteredRes = reservations.filter((reservation) => {
+    filteredRes = reservations.filter(r => {
       if (!dateFilter) return true;
-      const reservationDate = new Date(reservation.reservationDate + 'T00:00:00');
-      if (dateFilter === 'today') {
-        return reservationDate.toDateString() === today.toDateString();
-      }
-      if (dateFilter === 'week') {
-        return reservationDate >= startOfWeek;
-      }
+      const reservationDate = new Date(r.reservationDate + 'T00:00:00');
+      if (dateFilter === 'today') return reservationDate.toDateString() === today.toDateString();
+      if (dateFilter === 'week')  return reservationDate >= startOfWeek;
       return true;
     });
-
     renderReservations(filteredRes);
   }
 
   async function filterReservations() {
     const search = document.getElementById('searchRes').value.toLowerCase();
     if (search.length >= 2 || search.length === 0) {
-      try {
-        await fetchReservations();
-      } catch (error) {
-        showToast(error.message, false);
-      }
+      try { await fetchReservations(); } catch (error) { showToast(error.message, false); }
       return;
     }
-
     applyDateFilterAndRender();
   }
 
@@ -267,7 +324,7 @@
     document.getElementById('mDateTime').textContent = formatDate(r.reservationDate) + ' à ' + String(r.reservationTime).slice(0, 5);
     document.getElementById('mOccasion').textContent = r.occasion  || '—';
     document.getElementById('mPreorder').textContent = r.preorder  || 'Choix sur place';
-    document.getElementById('mRequests').textContent = r.specialRequests  || '—';
+    document.getElementById('mRequests').textContent = r.specialRequests || '—';
     document.getElementById('mAdminNote').value      = r.adminNote || '';
     document.getElementById('modalRes').dataset.resId = id;
     openModal('modalRes');
@@ -275,8 +332,7 @@
 
   async function updateReservationStatus(id, status, message, adminNote = '') {
     await adminFetch(`/api/admin/reservations/${id}/status`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status, adminNote })
+      method: 'PATCH', body: JSON.stringify({ status, adminNote })
     });
     await fetchReservations();
     showToast(message, status === 'CONFIRMED');
@@ -285,39 +341,25 @@
   async function confirmRes() {
     const id = document.getElementById('modalRes').dataset.resId;
     const adminNote = document.getElementById('mAdminNote').value.trim();
-    try {
-      await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée !', adminNote);
-      closeModal('modalRes');
-    } catch (error) {
-      showToast(error.message, false);
-    }
+    try { await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée !', adminNote); closeModal('modalRes'); }
+    catch (error) { showToast(error.message, false); }
   }
 
   async function cancelRes() {
     const id = document.getElementById('modalRes').dataset.resId;
     const adminNote = document.getElementById('mAdminNote').value.trim();
-    try {
-      await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée.', adminNote);
-      closeModal('modalRes');
-    } catch (error) {
-      showToast(error.message, false);
-    }
+    try { await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée.', adminNote); closeModal('modalRes'); }
+    catch (error) { showToast(error.message, false); }
   }
 
   async function quickConfirm(id) {
-    try {
-      await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée ✓');
-    } catch (error) {
-      showToast(error.message, false);
-    }
+    try { await updateReservationStatus(id, 'CONFIRMED', 'Réservation confirmée ✓'); }
+    catch (error) { showToast(error.message, false); }
   }
 
   async function quickCancel(id) {
-    try {
-      await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée');
-    } catch (error) {
-      showToast(error.message, false);
-    }
+    try { await updateReservationStatus(id, 'CANCELLED', 'Réservation annulée'); }
+    catch (error) { showToast(error.message, false); }
   }
 
   function exportCSV() {
@@ -332,7 +374,7 @@
     showToast('Export CSV téléchargé !', true);
   }
 
-  fetchReservations().catch((error) => showToast(error.message, false));
+  fetchReservations().catch(error => showToast(error.message, false));
 </script>
 </body>
 </html>
