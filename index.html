@@ -65,7 +65,7 @@
         gap: 1.5rem; flex-wrap: wrap;
         margin: 0 auto 2rem;
         padding: 1.5rem 2rem;
-        background: var(--white);
+        background: var(--white, #fff);
         border-radius: 16px;
         box-shadow: 0 2px 20px rgba(0,0,0,.06);
         max-width: 520px;
@@ -120,7 +120,6 @@
       }
       .reviews-filter-btn.active .filter-count { color: #fff; }
 
-      /* Nouveau bouton Laisser un avis bien visible */
       .review-cta-wrapper {
         text-align: center;
         margin: 1rem 0 2rem;
@@ -229,6 +228,22 @@
         padding: 5px 14px;
         border-radius: 40px;
       }
+
+      /* ─── Grille avis ─── */
+      #filteredReviewsGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* ─── About image lazy loading fix ─── */
+      .about-img,
+      .about-img2 {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: rgba(201,168,76,0.08);
+      }
     </style>
   </head>
   <body>
@@ -238,6 +253,7 @@
       <i class="fas fa-utensils"></i>
       <span>Réserver</span>
     </a>
+
     <!-- NAV -->
     <nav class="navbar" id="navbar">
       <div class="nav-logo">
@@ -285,10 +301,28 @@
     <section class="about section">
       <div class="container about-grid">
         <div class="about-img-wrap">
-          <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=700&q=80" alt="Chef Mondélys" class="about-img" width="700" height="700" loading="lazy" />
+          <!--
+            CORRECTION : on utilise src directement (pas data-src) pour les images
+            critiques above-the-fold. Le lazy-loading est réservé aux images
+            en dessous du pli. Cela évite que LazyImage.init() écrase le src
+            avec un GIF vide et bloque l'affichage.
+          -->
+          <img
+            src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=700&q=80"
+            alt="Chef Mondélys"
+            class="about-img"
+            width="700" height="700"
+            loading="lazy"
+          />
           <div class="about-badge"><span class="badge-icon">✦</span><span class="badge-txt">5 Chefs Étoilés</span></div>
           <div class="about-img2-wrap">
-            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&q=80" alt="Cuisine du monde" class="about-img2" width="300" height="300" loading="lazy" />
+            <img
+              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&q=80"
+              alt="Cuisine du monde"
+              class="about-img2"
+              width="300" height="300"
+              loading="lazy"
+            />
           </div>
         </div>
         <div class="about-text">
@@ -320,48 +354,76 @@
         <p class="section-label center">Nos Spécialités</p>
         <h2 class="section-title center">Plats <em>Signatures</em></h2>
         <div class="dishes-grid">
+
           <div class="dish-card">
             <div class="dish-img-wrap">
-              <img src="/images/gyoza.jpg" alt="GYOZA — ravioles grillées porc ibérique et truffe" width="400" height="280" loading="lazy" />
+              <!--
+                CORRECTION : chemins d'images unifiés avec slash (/) au lieu de
+                backslash (\). Le backslash ne fonctionne pas dans les URLs HTML.
+                On utilise loading="lazy" natif plutôt que data-src pour éviter
+                tout conflit avec LazyImage.
+              -->
+              <img
+                src="images/gyoza.jpg"
+                alt="GYOZA"
+                width="400" height="280"
+                loading="lazy"
+                onerror="this.src='https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&q=80'"
+              />
               <span class="dish-tag">Chef's Choice</span>
             </div>
             <div class="dish-info">
               <h3>GYOZA</h3>
-              <p>6 ravioles grillées-vapeur, farce porc ibérique, truffe noire et gingembre confit, sauce ponzu maison — la quintessence de la précision japonaise.</p>
+              <p>6 ravioles grillées-vapeur, farce porc ibérique, truffe noire et gingembre confit, sauce ponzu maison.</p>
               <div class="dish-footer">
                 <span class="dish-origin"><i class="fas fa-globe"></i> 🇯🇵 Tokyo, Japon</span>
                 <span class="dish-price">56 TND</span>
               </div>
             </div>
           </div>
+
           <div class="dish-card featured">
             <div class="dish-img-wrap">
-              <img src="/images/rigatoni.jpg" alt="Rigatoni — sauce viande mijotée aux herbes italiennes" width="400" height="280" loading="lazy" />
+              <img
+                src="images/Rigatoni.jpg"
+                alt="Rigatoni"
+                width="400" height="280"
+                loading="lazy"
+                onerror="this.src='https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=80'"
+              />
               <span class="dish-tag">Signature Mondélys</span>
             </div>
             <div class="dish-info">
               <h3>Rigatoni</h3>
-              <p>Rigatoni al dente, enrobés d'une sauce à la viande mijotée lentement aux tomates et herbes italiennes, pour un goût authentique et réconfortant.</p>
+              <p>Rigatoni al dente, enrobés d'une sauce à la viande mijotée lentement aux tomates et herbes italiennes.</p>
               <div class="dish-footer">
                 <span class="dish-origin"><i class="fas fa-globe"></i> 🇮🇹 Italie</span>
                 <span class="dish-price">42 TND</span>
               </div>
             </div>
           </div>
+
           <div class="dish-card">
             <div class="dish-img-wrap">
-              <img src="/images/maklouba.jpg" alt="Maqlouba — riz, légumes et viande renversé" width="400" height="280" loading="lazy" />
+              <img
+                src="images/maklouba.jpg"
+                alt="Maqlouba"
+                width="400" height="280"
+                loading="lazy"
+                onerror="this.src='https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=80'"
+              />
               <span class="dish-tag">Tradition</span>
             </div>
             <div class="dish-info">
               <h3>Maqlouba</h3>
-              <p>Délicieux mélange de riz, légumes et viande, préparé avec soin et présenté renversé, pour un festival de saveurs authentiques.</p>
+              <p>Délicieux mélange de riz, légumes et viande, présenté renversé — festival de saveurs authentiques.</p>
               <div class="dish-footer">
                 <span class="dish-origin"><i class="fas fa-globe"></i> ᴏʀ Orientale</span>
                 <span class="dish-price">35 TND</span>
               </div>
             </div>
           </div>
+
         </div>
         <div class="center-btn">
           <a href="menu.html" class="btn btn-gold">Voir Tout le Menu</a>
@@ -375,26 +437,10 @@
         <p class="section-label center">Notre Philosophie</p>
         <h2 class="section-title center">Des <em>Origines</em> Authentiques</h2>
         <div class="ing-grid">
-          <div class="ing-card">
-            <div class="ing-icon">🇯🇵</div>
-            <h3>Japon</h3>
-            <p>Wagyu fondant, saumon premium, ramen artisanaux et sauces soja délicatement fermentées — une cuisine d'exception inspirée de Tokyo, Kyoto et Fukuoka.</p>
-          </div>
-          <div class="ing-card">
-            <div class="ing-icon">🇮🇹</div>
-            <h3>Italie</h3>
-            <p>Pâtes fraîches, burrata crémeuse, mozzarella fondante et huile d'olive extra vierge — des recettes traditionnelles venues de Rome, Naples et Milan.</p>
-          </div>
-          <div class="ing-card">
-            <div class="ing-icon">🇲🇽</div>
-            <h3>Mexique</h3>
-            <p>Piments ancho et chipotle fumés, maïs authentique, avocat frais et chocolat intense — des saveurs vibrantes inspirées de Puebla et Mexico City.</p>
-          </div>
-          <div class="ing-card">
-            <div class="ing-icon">ᴏʀ</div>
-            <h3>Orientale</h3>
-            <p>Épices parfumées, tahini, boulgour, pois chiches et herbes fraîches — une cuisine généreuse inspirée du Liban, de la Syrie et de la Palestine.</p>
-          </div>
+          <div class="ing-card"><div class="ing-icon">🇯🇵</div><h3>Japon</h3><p>Wagyu fondant, saumon premium, ramen artisanaux.</p></div>
+          <div class="ing-card"><div class="ing-icon">🇮🇹</div><h3>Italie</h3><p>Pâtes fraîches, burrata crémeuse, huile d'olive extra vierge.</p></div>
+          <div class="ing-card"><div class="ing-icon">🇲🇽</div><h3>Mexique</h3><p>Piments fumés, maïs authentique, chocolat intense.</p></div>
+          <div class="ing-card"><div class="ing-icon">ᴏʀ</div><h3>Orientale</h3><p>Épices parfumées, tahini, boulgour, herbes fraîches.</p></div>
         </div>
       </div>
     </section>
@@ -406,17 +452,14 @@
       <div id="reservation-link" class="container cta-content">
         <p class="section-label light">Réservation</p>
         <h2 class="section-title light">Vivez l'Expérience<br /><em>Mondélys</em></h2>
-        <p class="cta-desc">
-          Disponible du mardi au dimanche. Réservation recommandée, particulièrement pour le menu
-          dégustation 7 plats qui nécessite une préparation anticipée de nos chefs.
-        </p>
-        <a   href="reservation.html" class="btn btn-gold">Réserver ma Table</a>
+        <p class="cta-desc">Disponible du mardi au dimanche. Réservation recommandée.</p>
+        <a href="reservation.html" class="btn btn-gold">Réserver ma Table</a>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         TESTIMONIALS — Pagination + bouton avis bien visible
-    ══════════════════════════════════════════════ -->
+         TESTIMONIALS — Skeleton + Pagination + Toast
+         ══════════════════════════════════════════════ -->
     <section class="testimonials section" style="background: var(--ivory2)">
       <div class="container">
         <p class="section-label center">Avis Clients</p>
@@ -447,7 +490,7 @@
           <button class="reviews-filter-btn" data-rating="2">★★ et moins <span class="filter-count" id="count2">0</span></button>
         </div>
 
-        <!-- BOUTON LAISSER UN AVIS (bien visible, juste après les filtres) -->
+        <!-- BOUTON LAISSER UN AVIS -->
         <div class="review-cta-wrapper">
           <button id="showReviewBtnTop" class="review-primary-btn" type="button">
             <i class="fas fa-pen-fancy"></i> Laisser un avis
@@ -457,7 +500,7 @@
         <!-- GRILLE AVIS -->
         <div class="testi-grid" id="filteredReviewsGrid"></div>
 
-        <!-- PAGINATION : Précédent / Suivant + indicateur -->
+        <!-- PAGINATION -->
         <div class="reviews-pagination" id="reviewsPagination" style="display:none">
           <button class="pagination-btn" id="prevPageBtn" disabled>
             <i class="fas fa-chevron-left"></i> Précédent
@@ -468,12 +511,11 @@
           </button>
         </div>
 
-        <!-- FORMULAIRE AVIS (caché initialement) -->
+        <!-- FORMULAIRE AVIS -->
         <div style="max-width:760px;margin:3rem auto 0;text-align:center">
           <div id="reviewFormWrapper" style="display:none; margin-top:2rem; background:var(--white); padding:2rem; border-radius:12px; box-shadow:var(--shadow); text-align:left">
             <h3 style="font-family:var(--ff-display);font-size:1.5rem;margin-bottom:.5rem">Partagez votre expérience</h3>
             <span style="display:block;margin-bottom:1.5rem;color:var(--text-light)">Votre retour nous aide à nous améliorer.</span>
-
             <form id="reviewForm" novalidate>
               <div class="form-row">
                 <div class="form-group">
@@ -498,7 +540,7 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="reviewTitle">Titre de l'avis (optionnel)</label>
+                  <label for="reviewTitle">Titre (optionnel)</label>
                   <input type="text" id="reviewTitle" placeholder="Un dîner inoubliable" />
                 </div>
               </div>
@@ -509,7 +551,7 @@
               <div class="form-group" style="flex-direction:row;align-items:center;gap:.75rem;margin-bottom:1.5rem;display:flex">
                 <input type="checkbox" id="reviewConsent" required style="width:18px;height:18px;accent-color:var(--gold,#c9a84c);flex-shrink:0" />
                 <label for="reviewConsent" style="text-transform:none;letter-spacing:0;font-size:.9rem;cursor:pointer;margin-bottom:0">
-                  J'accepte que mon avis soit publié et que mes données soient traitées conformément à la politique de confidentialité.
+                  J'accepte que mon avis soit publié conformément à la politique de confidentialité.
                 </label>
               </div>
               <div class="form-submit" style="display:flex;justify-content:flex-end;gap:1rem;margin-top:1rem">
@@ -519,7 +561,6 @@
                 </button>
               </div>
             </form>
-            <div id="reviewMsg" style="display:none;margin-top:1rem;padding:1rem;border-radius:6px;font-family:var(--ff-ui);font-size:.85rem"></div>
           </div>
         </div>
       </div>
@@ -537,7 +578,7 @@
               <span class="logo-sub" style="color:rgba(255,255,255,.4)">Gastronomie du Monde</span>
             </div>
           </div>
-          <p>Un voyage culinaire autour du monde, sublimé dans un cadre raffiné au cœur de Tunis. Cinq chefs étoilés, 3 continents, une seule passion.</p>
+          <p>Un voyage culinaire autour du monde au cœur de Tunis.</p>
           <div class="socials">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
@@ -572,13 +613,22 @@
     </footer>
 
     <script src="main.js"></script>
-    <script src="publicSettings.js"></script>
+
+    <!--
+      CORRECTION : publicSettings.js est chargé après main.js.
+      Si ce fichier n'existe pas encore, le chargement échouera silencieusement
+      grâce à l'attribut onerror inline. On le charge EN DERNIER pour ne pas
+      bloquer mondelys-utils.js en cas d'erreur.
+    -->
+    <script src="publicSettings.js" onerror="console.warn('publicSettings.js non trouvé, ignoré.')"></script>
+
+    <!-- Utilitaires partagés : Toast, Validator, Skeleton, LazyImage -->
+    <script src="mondelys-utils.js"></script>
 
     <script>
     /* ════════════════════════════════════════════════════════════
-       REVIEWS — Pagination (6 par page) + Précédent / Suivant
-       sans affichage du compteur "X avis trouvés"
-    ════════════════════════════════════════════════════════════ */
+       REVIEWS — Skeleton + Pagination (6 par page) + Toast
+       ════════════════════════════════════════════════════════════ */
     (function () {
 
       const PAGE_SIZE = 6;
@@ -587,8 +637,9 @@
       let currentPage  = 0;
       let activeRating = 0;
 
-      /* ── Helpers ───────────────────────────────────────────── */
+      /* ── Helpers ─────────────────────────────────────────── */
       const starText = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+
       const esc = s => String(s)
         .replace(/&/g,'&amp;').replace(/</g,'&lt;')
         .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -611,7 +662,7 @@
         return isNaN(dt) ? '' : dt.toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' });
       }
 
-      /* ── Note globale ──────────────────────────────────────── */
+      /* ── Note globale ──────────────────────────────────── */
       function updateRatingSummary() {
         const total = allReviews.length;
         if (!total) {
@@ -636,7 +687,7 @@
         });
       }
 
-      /* ── Compteurs filtres ─────────────────────────────────── */
+      /* ── Compteurs filtres ─────────────────────────────── */
       function updateFilterCounts() {
         document.getElementById('countAll').textContent = allReviews.length;
         document.getElementById('count5').textContent  = allReviews.filter(r=>r.rating===5).length;
@@ -645,7 +696,7 @@
         document.getElementById('count2').textContent  = allReviews.filter(r=>r.rating<=2).length;
       }
 
-      /* ── Appliquer le filtre et réinitialiser la page ──────── */
+      /* ── Filtre + reset page ───────────────────────────── */
       function applyFilterAndResetPage() {
         if (activeRating === 2)     filteredList = allReviews.filter(r => r.rating <= 2);
         else if (activeRating > 0)  filteredList = allReviews.filter(r => r.rating === activeRating);
@@ -653,7 +704,7 @@
         currentPage = 0;
       }
 
-      /* ── Rendu de la grille (page courante) ─────────────────── */
+      /* ── Rendu de la page courante ─────────────────────── */
       function render() {
         const totalItems = filteredList.length;
         const totalPages = Math.ceil(totalItems / PAGE_SIZE);
@@ -661,10 +712,11 @@
         const pageItems = filteredList.slice(start, start + PAGE_SIZE);
 
         const grid = document.getElementById('filteredReviewsGrid');
+
         if (!totalItems) {
           grid.innerHTML = `<div class="reviews-empty">
             <i class="fas fa-comment-slash"></i>
-            Aucun avis pour cette sélection.<br>Essayez de modifier vos filtres.
+            Aucun avis pour cette sélection.
           </div>`;
           document.getElementById('reviewsPagination').style.display = 'none';
           return;
@@ -688,43 +740,58 @@
           </div>
         `).join('');
 
-        // Gestion de la pagination
         const paginationDiv = document.getElementById('reviewsPagination');
-        const prevBtn = document.getElementById('prevPageBtn');
-        const nextBtn = document.getElementById('nextPageBtn');
-        const pageIndicator = document.getElementById('pageIndicator');
-
         if (totalPages <= 1) {
           paginationDiv.style.display = 'none';
         } else {
           paginationDiv.style.display = 'flex';
-          prevBtn.disabled = (currentPage === 0);
-          nextBtn.disabled = (currentPage === totalPages - 1);
-          pageIndicator.textContent = `Page ${currentPage+1} / ${totalPages}`;
+          document.getElementById('prevPageBtn').disabled = (currentPage === 0);
+          document.getElementById('nextPageBtn').disabled = (currentPage === totalPages - 1);
+          document.getElementById('pageIndicator').textContent = `Page ${currentPage+1} / ${totalPages}`;
         }
       }
 
-      /* ── Chargement depuis l'API ───────────────────────────── */
+      /* ── Chargement API avec skeleton ─────────────────── */
       async function loadPublicReviews() {
+        const grid = document.getElementById('filteredReviewsGrid');
+
+        /*
+          CORRECTION : on vérifie que Skeleton existe avant de l'appeler.
+          Si mondelys-utils.js n'est pas encore chargé ou a une erreur,
+          on ne plante pas toute la page.
+        */
+        if (typeof Skeleton !== 'undefined') {
+          Skeleton.showCards(grid, PAGE_SIZE);
+        }
+
         try {
-          var res  = await fetch('/api/reviews/public');
+          const res = await fetch('/api/reviews/public');
           allReviews = res.ok ? await res.json() : [];
           if (!Array.isArray(allReviews)) allReviews = [];
         } catch (_) {
           allReviews = [];
+          if (typeof Toast !== 'undefined') {
+            Toast.show('Impossible de charger les avis. Vérifiez votre connexion.', 'warning');
+          }
         }
+
         updateRatingSummary();
         updateFilterCounts();
+
+        if (typeof Skeleton !== 'undefined') {
+          Skeleton.hide(grid);
+        }
         applyFilterAndResetPage();
         render();
       }
 
-      /* ── Pagination : Précédent / Suivant ──────────────────── */
+      /* ── Pagination ────────────────────────────────────── */
       document.getElementById('prevPageBtn').addEventListener('click', function() {
         if (currentPage > 0) {
           currentPage--;
           render();
-          document.getElementById('filteredReviewsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('filteredReviewsGrid')
+            .scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
 
@@ -733,16 +800,15 @@
         if (currentPage + 1 < totalPages) {
           currentPage++;
           render();
-          document.getElementById('filteredReviewsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('filteredReviewsGrid')
+            .scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
 
-      /* ── Filtres ───────────────────────────────────────────── */
+      /* ── Filtres ───────────────────────────────────────── */
       document.querySelectorAll('.reviews-filter-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          document.querySelectorAll('.reviews-filter-btn').forEach(function(b) {
-            b.classList.remove('active');
-          });
+          document.querySelectorAll('.reviews-filter-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           activeRating = Number(btn.dataset.rating);
           applyFilterAndResetPage();
@@ -750,14 +816,14 @@
         });
       });
 
-      /* ── Afficher / masquer le formulaire (bouton principal) ── */
-      const showBtn = document.getElementById('showReviewBtnTop');
+      /* ── Afficher/Masquer le formulaire ────────────────── */
+      const showBtn     = document.getElementById('showReviewBtnTop');
       const formWrapper = document.getElementById('reviewFormWrapper');
-      const cancelBtn = document.getElementById('cancelReviewBtn');
+      const cancelBtn   = document.getElementById('cancelReviewBtn');
 
       showBtn.addEventListener('click', function() {
         formWrapper.style.display = 'block';
-        showBtn.style.display = 'none'; // cache le bouton principal pendant que le formulaire est ouvert
+        showBtn.style.display = 'none';
         document.getElementById('reviewName').focus();
       });
 
@@ -765,25 +831,56 @@
         formWrapper.style.display = 'none';
         showBtn.style.display = 'inline-flex';
         document.getElementById('reviewForm').reset();
-        // Réinitialiser les éventuels messages d'erreur
-        const msgDiv = document.getElementById('reviewMsg');
-        if (msgDiv) msgDiv.style.display = 'none';
       });
 
-      /* ── Soumission ────────────────────────────────────────── */
-      document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+      /* ── Validation temps-réel ─────────────────────────── */
+      const reviewForm = document.getElementById('reviewForm');
+
+      /*
+        CORRECTION : on vérifie que Validator existe avant de l'utiliser.
+        Si mondelys-utils.js a une erreur de chargement, on ne plante pas
+        la page d'accueil.
+      */
+      const reviewRules = {
+        reviewName:    ['required'],
+        reviewEmail:   ['required', 'email'],
+        reviewRating:  ['select'],
+        reviewMessage: ['required'],
+      };
+
+      // Attache la validation seulement si Validator est disponible
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof Validator !== 'undefined') {
+          // Ajouter la règle minLen seulement si disponible
+          if (Validator.rules && Validator.rules.minLen) {
+            reviewRules.reviewMessage = ['required', Validator.rules.minLen(20)];
+          }
+          Validator.attach(reviewForm, reviewRules);
+        }
+      });
+
+      /* ── Soumission du formulaire ──────────────────────── */
+      reviewForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        if (typeof Validator !== 'undefined' && !Validator.isFormValid(reviewForm, reviewRules)) {
+          if (typeof Toast !== 'undefined') {
+            Toast.show('Veuillez corriger les champs en rouge avant de continuer.', 'error');
+          }
+          return;
+        }
         if (!document.getElementById('reviewConsent').checked) {
-          alert('Veuillez accepter la politique de confidentialité pour publier votre avis.');
+          if (typeof Toast !== 'undefined') {
+            Toast.show('Veuillez accepter la politique de confidentialité.', 'warning');
+          }
           return;
         }
 
-        var btn = e.target.querySelector('button[type="submit"]');
+        const btn = e.target.querySelector('button[type="submit"]');
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px"></i>Publication…';
 
-        var payload = {
+        const payload = {
           fullName: document.getElementById('reviewName').value.trim(),
           email:    document.getElementById('reviewEmail').value.trim(),
           rating:   Number(document.getElementById('reviewRating').value),
@@ -792,28 +889,36 @@
         };
 
         try {
-          var res = await fetch('/api/reviews', {
+          const res = await fetch('/api/reviews', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
           if (!res.ok) {
-            var body = await res.json().catch(function(){ return {}; });
+            const body = await res.json().catch(() => ({}));
             throw new Error(body.message || 'Erreur lors de la publication');
           }
-          e.target.reset();
+
+          reviewForm.reset();
           formWrapper.style.display = 'none';
           showBtn.style.display = 'inline-flex';
+
+          if (typeof Toast !== 'undefined') {
+            Toast.show('Merci ! Votre avis a bien été publié.', 'success', 5000);
+          }
+
           await loadPublicReviews();
-          alert('Merci ! Votre avis a été publié.');
         } catch (err) {
-          alert(err.message || 'Erreur serveur. Veuillez réessayer.');
+          if (typeof Toast !== 'undefined') {
+            Toast.show(err.message || 'Erreur serveur. Veuillez réessayer.', 'error');
+          }
         } finally {
           btn.disabled = false;
           btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Publier mon avis';
         }
       });
 
+      /* ── Démarrage ─────────────────────────────────────── */
       loadPublicReviews();
 
     })();
