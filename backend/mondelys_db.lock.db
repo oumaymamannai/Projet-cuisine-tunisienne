@@ -1,6 +1,6 @@
 #FileLock
-#Fri Apr 10 10:16:50 CET 2026
-hostName=LAPTOP-N2MHJ84Q
-id=19d76adedd9dc77b245b57db83456dc4a3803ccd379
+#Thu Apr 23 21:19:39 CEST 2026
+server=192.168.1.101\:65131
+hostName=mimi
 method=file
-server=192.168.56.1\:65476
+id=19dbbc89356c508d1aea961407c1b292891b3f98044

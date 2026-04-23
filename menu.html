@@ -198,6 +198,34 @@
       }
       .menu-item.scroll-visible { opacity: 1; transform: translateY(0); }
 
+      /* ─── FLOATING BUTTON ─── */
+      .float-badge {
+        position: fixed;
+        bottom: 2rem; right: 2rem;
+        z-index: 999;
+        width: 76px; height: 76px;
+        border-radius: 50%;
+        background: var(--gold, #c9a84c);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        box-shadow: 0 8px 30px rgba(201,168,76,.5);
+        text-decoration: none;
+        transition: transform 0.2s;
+        animation: float-pulse 3s ease-in-out infinite;
+      }
+      .float-badge:hover { transform: scale(1.1); }
+      .float-badge i { color: #1a1208; font-size: 1.35rem; }
+      .float-badge span {
+        font-family: var(--ff-ui,'Raleway',sans-serif);
+        font-size: 8.5px; font-weight: 700;
+        letter-spacing: .1em; text-transform: uppercase;
+        color: #1a1208; margin-top: 3px;
+      }
+      @keyframes float-pulse {
+        0%,100% { box-shadow: 0 8px 30px rgba(171,142,64,.5); }
+        50%      { box-shadow: 0 8px 40px rgba(201,168,76,.8), 0 0 0 12px rgba(201,168,76,.07); }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
           animation-duration: 0.01ms !important;
@@ -207,7 +235,14 @@
     </style>
   </head>
   <body>
-    <nav class="navbar scrolled" id="navbar">
+
+    <!-- BOUTON FLOTTANT -->
+    <a href="reservation.html" class="float-badge" title="Réserver une table">
+      <i class="fas fa-utensils"></i>
+      <span>Réserver</span>
+    </a>
+
+    <nav class="navbar" id="navbar">
       <div class="nav-logo">
         <span class="logo-emblem">☽</span>
         <div class="logo-text-wrap">
@@ -221,7 +256,9 @@
         <li><a href="reservation.html">Réservation</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-      <a href="reservation.html" class="nav-cta">Réserver</a>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
     </nav>
 
     <!-- PAGE HEADER -->
@@ -466,6 +503,7 @@
                 </p>
                 <p class="menu-item-origin">
                   <i class="fas fa-map-marker-alt"></i>Mexico City, Mexique
+                </p>
                 <div class="menu-item-tags">
                   <span class="tag-badge tag-chef">Chef's Choice</span>
                 </div>
