@@ -1166,13 +1166,6 @@
         observer.observe(item);
       });
 
-      // --- Header parallax ---
-      const headerBg = document.querySelector('.page-header-bg');
-      if (headerBg) {
-        window.addEventListener('scroll', () => {
-          headerBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
-        }, { passive: true });
-      }
     </script>
   </body>
 </html>
